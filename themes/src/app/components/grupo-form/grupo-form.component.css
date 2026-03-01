@@ -1,0 +1,373 @@
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: 100vh;
+  background: transparent;
+}
+
+.form-header {
+  margin-bottom: 2rem;
+}
+
+.form-header h2 {
+  margin: 0;
+  color: #424A54;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.alert {
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}
+
+.alert-error {
+  background: #fff5f5;
+  color: #e53e3e;
+  border: 1px solid #feb2b2;
+}
+
+.alert-success {
+  background: #f0fdf4;
+  color: #52E78D;
+  border: 1px solid #bbf7d0;
+}
+
+form {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #424A54;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.required {
+  color: #e53e3e;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #52E78D;
+  box-shadow: 0 0 0 3px rgba(82, 231, 141, 0.1);
+}
+
+.form-group input.invalid,
+.form-group textarea.invalid {
+  border-color: #e53e3e;
+}
+
+.error-message {
+  display: block;
+  margin-top: 0.5rem;
+  color: #e53e3e;
+  font-size: 0.85rem;
+}
+
+.label-with-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.label-with-button label {
+  margin-bottom: 0;
+}
+
+.btn-generate-ai {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.9rem;
+  background: #52E78D;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(82, 231, 141, 0.3);
+}
+
+.btn-generate-ai:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(82, 231, 141, 0.4);
+  background: #3dc176;
+}
+
+.btn-generate-ai:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-generate-ai:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+.form-section {
+  margin: 2rem 0;
+  padding-top: 2rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.form-section h3 {
+  margin: 0 0 0.5rem 0;
+  color: #424A54;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.section-description {
+  margin: 0 0 1.5rem 0;
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.loading-recursos,
+.empty-recursos {
+  padding: 2rem;
+  text-align: center;
+  background: #f8f9fa;
+  border-radius: 8px;
+  color: #6c757d;
+}
+
+.empty-recursos a {
+  color: #52E78D;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.empty-recursos a:hover {
+  text-decoration: underline;
+}
+
+.recursos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  /* Otimizações de performance */
+  will-change: scroll-position;
+  -webkit-overflow-scrolling: touch;
+  contain: layout style paint;
+}
+
+.recursos-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.recursos-list::-webkit-scrollbar-track {
+  background: #f1f3f5;
+  border-radius: 4px;
+}
+
+.recursos-list::-webkit-scrollbar-thumb {
+  background: #dee2e6;
+  border-radius: 4px;
+}
+
+.recursos-list::-webkit-scrollbar-thumb:hover {
+  background: #adb5bd;
+}
+
+.recurso-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  /* Otimização de performance */
+  will-change: transform, background-color, border-color;
+  transform: translateZ(0);
+}
+
+.recurso-item:hover {
+  background: #e9ecef;
+  border-color: #52E78D;
+}
+
+.recurso-item.selected {
+  background: #f0fdf4;
+  border-color: #52E78D;
+}
+
+.recurso-checkbox {
+  flex-shrink: 0;
+  color: #6c757d;
+}
+
+.recurso-checkbox lucide-icon.checked {
+  color: #52E78D;
+}
+
+.recurso-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.recurso-titulo {
+  font-weight: 600;
+  color: #424A54;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recurso-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.85rem;
+}
+
+.recurso-tipo {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+.tipo-video {
+  background: #e0f2fe;
+  color: #0284c7;
+}
+
+.tipo-pdf {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.tipo-link {
+  background: #e0e7ff;
+  color: #6366f1;
+}
+
+.recurso-tags {
+  color: #6c757d;
+}
+
+.selected-count {
+  padding: 0.75rem 1rem;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 6px;
+  color: #52E78D;
+  font-weight: 600;
+  text-align: center;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.75rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: #f8f9fa;
+  color: #424A54;
+  border: 1px solid #e9ecef;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #e9ecef;
+}
+
+.btn-primary {
+  background: #424A54;
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #2c3238;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(66, 74, 84, 0.2);
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  form {
+    padding: 1.5rem;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

@@ -1,0 +1,111 @@
+<div class="container">
+  <div class="form-header">
+    <h2>{{ isEditMode ? 'Editar Grupo' : 'Novo Grupo' }}</h2>
+  </div>
+
+  <div *ngIf="error" class="alert alert-error">
+    {{ error }}
+  </div>
+
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+
+  <form [formGroup]="grupoForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="nome">
+        Nome do Grupo <span class="required">*</span>
+      </label>
+      <input
+        id="nome"
+        type="text"
+        formControlName="nome"
+        placeholder="Ex: Aula 1, Módulo Python Básico, etc."
+        [class.invalid]="isFieldInvalid('nome')"
+      />
+      <span *ngIf="isFieldInvalid('nome')" class="error-message">
+        {{ getFieldError('nome') }}
+      </span>
+    </div>
+
+    <div class="form-group">
+      <div class="label-with-button">
+        <label for="descricao">Descrição</label>
+        <button 
+          type="button" 
+          class="btn-generate-ai" 
+          (click)="gerarDescricao()"
+          [disabled]="!podeGerarDescricao() || gerandoDescricao"
+          title="Gerar descrição com IA">
+          <lucide-icon 
+            [img]="gerandoDescricao ? Loader2Icon : SparklesIcon" 
+            [size]="16"
+            [class.spinning]="gerandoDescricao">
+          </lucide-icon>
+          <span *ngIf="!gerandoDescricao">Gerar Descrição</span>
+          <span *ngIf="gerandoDescricao">Gerando...</span>
+        </button>
+      </div>
+      <textarea
+        id="descricao"
+        formControlName="descricao"
+        rows="3"
+        placeholder="Descreva o objetivo ou conteúdo deste grupo..."
+      ></textarea>
+    </div>
+
+    <div class="form-section">
+      <h3>Materiais do Grupo</h3>
+      <p class="section-description">Selecione os materiais que farão parte deste grupo</p>
+
+      <div *ngIf="loadingRecursos" class="loading-recursos">
+        Carregando materiais...
+      </div>
+
+      <div *ngIf="!loadingRecursos && todosRecursos.length === 0" class="empty-recursos">
+        Nenhum material cadastrado. 
+        <a routerLink="/recursos/novo">Criar primeiro material</a>
+      </div>
+
+      <div class="recursos-list" *ngIf="!loadingRecursos && todosRecursos.length > 0">
+        <div 
+          *ngFor="let recurso of todosRecursos; trackBy: trackByRecursoId" 
+          class="recurso-item"
+          [class.selected]="isRecursoSelecionado(recurso.id)"
+          (click)="toggleRecurso(recurso.id)">
+          <div class="recurso-checkbox">
+            <lucide-icon 
+              [img]="isRecursoSelecionado(recurso.id) ? CheckIcon : SquareIcon" 
+              [size]="20"
+              [class.checked]="isRecursoSelecionado(recurso.id)">
+            </lucide-icon>
+          </div>
+          <div class="recurso-info">
+            <div class="recurso-titulo">{{ recurso.titulo }}</div>
+            <div class="recurso-meta">
+              <span class="recurso-tipo tipo-{{ recurso.tipo }}">{{ recurso.tipo }}</span>
+              <span class="recurso-tags" *ngIf="recurso.tags.length > 0">
+                {{ recurso.tags.length }} tag{{ recurso.tags.length > 1 ? 's' : '' }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="selected-count" *ngIf="recursosSelecionados.size > 0">
+        {{ recursosSelecionados.size }} {{ recursosSelecionados.size === 1 ? 'material selecionado' : 'materiais selecionados' }}
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-secondary" (click)="cancelar()">
+        <lucide-icon [img]="XIcon" [size]="18"></lucide-icon>
+        Cancelar
+      </button>
+      <button type="submit" class="btn btn-primary" [disabled]="loading">
+        <lucide-icon [img]="SaveIcon" [size]="18"></lucide-icon>
+        {{ loading ? 'Salvando...' : (isEditMode ? 'Atualizar' : 'Criar Grupo') }}
+      </button>
+    </div>
+  </form>
+</div>
