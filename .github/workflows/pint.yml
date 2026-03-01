@@ -1,0 +1,56 @@
+name: Laravel Pint
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/pint.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/pint.yml'
+
+jobs:
+  pint:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, xml, pgsql, pdo_pgsql
+          coverage: none
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: source/vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Instalar dependências
+        working-directory: ./source
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Executar Laravel Pint
+        working-directory: ./source
+        run: ./vendor/bin/pint --test
+
+      - name: Enviar comentário no PR (se falhar)
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '❌ O Laravel Pint encontrou problemas de formatação. Execute `./vendor/bin/pint` localmente para corrigir.'
+            })
