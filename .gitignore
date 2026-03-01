@@ -1,0 +1,48 @@
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+.docker/
+
+# Logs
+*.log
+logs/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Source (Laravel)
+source/vendor/
+source/node_modules/
+source/.env
+source/storage/*.key
+source/storage/logs/*
+source/storage/framework/cache/*
+source/storage/framework/sessions/*
+source/storage/framework/views/*
+source/bootstrap/cache/*
+source/.phpunit.result.cache
+source/public/hot
+source/public/storage
+
+# Themes (Angular)  
+themes/node_modules/
+themes/dist/
+themes/.angular/
+themes/coverage/
+themes/.nyc_output/
+
+# Database
+*.sql
+*.sqlite
+*.sqlite3
