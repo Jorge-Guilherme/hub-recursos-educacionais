@@ -1,0 +1,74 @@
+<div class="grupos-view">
+  <div class="header-section">
+    <h2>Grupos de Materiais</h2>
+    <button class="btn-create" routerLink="/grupos/novo" [queryParams]="{tab: 'grupos'}">
+      <lucide-icon [img]="PlusIcon" [size]="18"></lucide-icon>
+      <span>Novo Grupo</span>
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <p>Carregando grupos...</p>
+  </div>
+
+  <div *ngIf="error" class="alert-error">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!loading && grupos.length === 0" class="empty-state">
+    <lucide-icon [img]="FolderOpenIcon" [size]="64" class="empty-icon"></lucide-icon>
+    <h3>Nenhum grupo criado</h3>
+    <p>Crie grupos para organizar seus materiais didáticos</p>
+    <button class="btn-create-large" routerLink="/grupos/novo" [queryParams]="{tab: 'grupos'}">
+      <lucide-icon [img]="PlusIcon" [size]="20"></lucide-icon>
+      <span>Criar Primeiro Grupo</span>
+    </button>
+  </div>
+
+  <div class="grupos-grid" *ngIf="!loading && grupos.length > 0">
+    <div class="grupo-card" *ngFor="let grupo of grupos">
+      <div class="card-header">
+        <div class="card-icon">
+          <lucide-icon [img]="FolderOpenIcon" [size]="32"></lucide-icon>
+        </div>
+        <div class="card-actions">
+          <button 
+            class="btn-icon" 
+            [routerLink]="['/grupos', grupo.id, 'editar']"
+            [queryParams]="{tab: 'grupos'}"
+            title="Editar grupo">
+            <lucide-icon [img]="Edit2Icon" [size]="16"></lucide-icon>
+          </button>
+          <button 
+            class="btn-icon btn-delete" 
+            (click)="excluirGrupo(grupo.id, grupo.nome)"
+            title="Excluir grupo">
+            <lucide-icon [img]="Trash2Icon" [size]="16"></lucide-icon>
+          </button>
+        </div>
+      </div>
+      
+      <div class="card-content">
+        <h3 class="grupo-nome">{{ grupo.nome }}</h3>
+        <p class="grupo-descricao" *ngIf="grupo.descricao">
+          {{ grupo.descricao }}
+        </p>
+        <div class="grupo-meta">
+          <div class="meta-item">
+            <lucide-icon [img]="FileTextIcon" [size]="16"></lucide-icon>
+            <span>{{ grupo.recursos_count }} {{ grupo.recursos_count === 1 ? 'material' : 'materiais' }}</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card-footer">
+        <button 
+          class="btn-view" 
+          [routerLink]="['/grupos', grupo.id]"
+          [queryParams]="{tab: 'grupos'}">
+          Ver Detalhes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
