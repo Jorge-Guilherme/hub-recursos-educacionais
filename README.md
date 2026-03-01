@@ -78,7 +78,7 @@ docker-compose up -d
 - **API Health**: http://localhost:8000/api/health
 - **PostgreSQL**: localhost:5432
 
-## � Integração com Gemini AI
+## Integração com Gemini AI
 
 O projeto inclui integração com Google Gemini AI para geração automática de descrições de recursos educacionais.
 
@@ -101,12 +101,6 @@ docker-compose restart backend
 
 ### Uso
 
-No formulário de criação/edição de recursos:
-1. Preencha o **Título** e selecione o **Tipo**
-2. Opcionalmente, adicione a **URL**
-3. Clique no botão **✨ Gerar com IA** ao lado do campo de descrição
-4. A descrição será gerada automaticamente pela IA
-
 ### Endpoint
 
 ```http
@@ -127,7 +121,7 @@ Resposta:
 }
 ```
 
-## �🧪 Testes e Qualidade
+## Testes e Qualidade
 
 ### Linting
 
@@ -145,13 +139,13 @@ docker-compose exec backend ./vendor/bin/phpcs
 docker-compose exec backend php artisan test
 ```
 
-## 🔄 GitHub Actions
+## GitHub Actions
 
 Workflows automáticos:
 - **Laravel Pint**: Verifica formatação
 - **PHP_CodeSniffer**: Verifica padrões PSR-12
 
-## 📁 Estrutura
+## Estrutura
 
 ```
 hub-recursos-educacionais/
@@ -165,7 +159,7 @@ hub-recursos-educacionais/
 └── docker-compose.yml
 ```
 
-## 🐳 Comandos Docker
+## Comandos Docker
 
 ```bash
 make up            # Iniciar
@@ -175,7 +169,7 @@ make pint          # Executar linter
 make test          # Executar testes
 ```
 
-## 📝 Desenvolvimento
+## Desenvolvimento
 
 ### Source (Laravel)
 
@@ -206,16 +200,4 @@ docker-compose exec frontend ng g service services/nome
 docker-compose exec frontend ng g module modules/nome --routing
 ```
 
-## 🤝 Contribuindo
-
-1. Fork o projeto
-2. Crie uma branch (`git checkout -b feature/nova-feature`)
-3. Commit (`git commit -m 'feat: adiciona nova feature'`)
-4. Push (`git push origin feature/nova-feature`)
-5. Abra um Pull Request
-
 Siga os princípios **SOLID** e **Clean Architecture**.
-
-## 📄 Licença
-
-MIT
