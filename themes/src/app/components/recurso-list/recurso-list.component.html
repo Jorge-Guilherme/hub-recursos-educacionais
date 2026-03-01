@@ -1,0 +1,209 @@
+<div class="container">
+  <div class="main-header">
+    <h1>Hub de Materiais Didáticos</h1>
+    <div class="materials-counter">
+      <span class="counter-number">{{ total }}</span>
+      <span class="counter-label">{{ total === 1 ? 'material cadastrado' : 'materiais cadastrados' }}</span>
+    </div>
+  </div>
+
+  <div class="tabs-container">
+    <div class="tabs">
+    <button 
+      class="tab" 
+      [class.active]="activeTab === 'lista'"
+      (click)="activeTab = 'lista'">
+      Lista Geral
+    </button>
+    <button 
+      class="tab" 
+      [class.active]="activeTab === 'grupos'"
+      (click)="activeTab = 'grupos'">
+      Grupos
+    </button>
+    </div>
+    <a routerLink="/novo" class="btn-add-material">
+      <lucide-icon [img]="PlusIcon" [size]="20"></lucide-icon>
+      <span>Adicionar Material</span>
+    </a>
+  </div>
+
+  <!-- Conteúdo da aba Grupos -->
+  <app-grupo-list *ngIf="activeTab === 'grupos'"></app-grupo-list>
+
+  <!-- Conteúdo da aba Lista Geral -->
+  <div *ngIf="activeTab === 'lista'" class="lista-content">
+  <div class="search-section">
+    <div class="search-bar">
+      <div class="search-input-wrapper">
+        <lucide-icon [img]="SearchIcon" class="search-icon"></lucide-icon>
+        <input 
+          type="text" 
+          class="search-input" 
+          placeholder="Buscar recursos..."
+          [(ngModel)]="searchTerm"
+          (input)="onSearch()">
+      </div>
+      
+      <button 
+        class="filter-toggle-btn" 
+        (click)="toggleFilters()"
+        [class.active]="showFilters || hasActiveFilters()">
+        <lucide-icon [img]="FilterIcon" [size]="18"></lucide-icon>
+        <span>Filtros</span>
+        <span *ngIf="hasActiveFilters()" class="filter-badge">{{ (filterTipo ? 1 : 0) + filterTags.length }}</span>
+      </button>
+    </div>
+
+    <div class="filters-panel" [class.show]="showFilters">
+      <div class="filter-group">
+        <label>
+          <lucide-icon [img]="FilterIcon" [size]="16"></lucide-icon>
+          Tipo de Recurso
+        </label>
+        <div class="filter-options">
+          <button 
+            class="filter-chip" 
+            [class.active]="filterTipo === ''"
+            (click)="filterTipo = ''; aplicarFiltros()">
+            Todos
+          </button>
+          <button 
+            class="filter-chip" 
+            [class.active]="filterTipo === 'video'"
+            (click)="filterTipo = 'video'; aplicarFiltros()">
+            <lucide-icon [img]="VideoIcon" [size]="16"></lucide-icon>
+            Vídeo
+          </button>
+          <button 
+            class="filter-chip" 
+            [class.active]="filterTipo === 'pdf'"
+            (click)="filterTipo = 'pdf'; aplicarFiltros()">
+            <lucide-icon [img]="FileTextIcon" [size]="16"></lucide-icon>
+            PDF
+          </button>
+          <button 
+            class="filter-chip" 
+            [class.active]="filterTipo === 'link'"
+            (click)="filterTipo = 'link'; aplicarFiltros()">
+            <lucide-icon [img]="Link2Icon" [size]="16"></lucide-icon>
+            Link
+          </button>
+        </div>
+      </div>
+
+      <div class="filter-group" *ngIf="availableTags.length > 0">
+        <label>
+          <lucide-icon [img]="TagIcon" [size]="16"></lucide-icon>
+          Tags
+        </label>
+        <div class="filter-options tags-filter">
+          <button 
+            *ngFor="let tag of availableTags" 
+            class="filter-chip tag-chip" 
+            [class.active]="isTagSelected(tag)"
+            (click)="toggleTagFilter(tag)">
+            {{ tag }}
+          </button>
+        </div>
+      </div>
+
+      <div class="filter-actions" *ngIf="hasActiveFilters()">
+        <button class="btn-clear-filters" (click)="limparFiltros()">
+          <lucide-icon [img]="XIcon" [size]="16"></lucide-icon>
+          Limpar Filtros
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <p>Carregando recursos...</p>
+  </div>
+
+  <div *ngIf="error" class="alert alert-error">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!loading && recursos.length === 0" class="empty-state">
+    <p>Nenhum recurso encontrado.</p>
+    <a routerLink="/novo" class="btn btn-primary">Criar primeiro recurso</a>
+  </div>
+
+  <div class="content-wrapper" *ngIf="activeTab === 'lista'">
+    <div *ngIf="!loading && recursos.length > 0" class="recursos-list">
+      <div *ngFor="let recurso of recursos" class="recurso-item">
+        <div class="recurso-main">
+          <div class="recurso-tipo-icon">
+            <lucide-icon 
+              [img]="recurso.tipo === 'video' ? VideoIcon : recurso.tipo === 'pdf' ? FileTextIcon : Link2Icon" 
+              [size]="20">
+            </lucide-icon>
+          </div>
+          <div class="recurso-title" (click)="toggleRecurso(recurso.id)">{{ recurso.titulo }}</div>
+          <div class="recurso-indicators">
+            <button 
+              class="action-btn edit" 
+              [routerLink]="['/editar', recurso.id]"
+              title="Editar"
+              (click)="$event.stopPropagation()">
+              <lucide-icon [img]="Edit2Icon" [size]="16"></lucide-icon>
+            </button>
+            <button 
+              class="action-btn delete" 
+              (click)="excluirRecurso(recurso.id, recurso.titulo); $event.stopPropagation()"
+              title="Excluir">
+              <lucide-icon [img]="Trash2Icon" [size]="16"></lucide-icon>
+            </button>
+            <button class="dropdown-btn" (click)="toggleRecurso(recurso.id)">
+              <lucide-icon 
+                [img]="ChevronDownIcon" 
+                [size]="20"
+                [class.rotated]="isExpanded(recurso.id)">
+              </lucide-icon>
+            </button>
+          </div>
+        </div>
+        
+        <div class="recurso-expanded" [class.show]="isExpanded(recurso.id)">
+          <div class="recurso-info">
+            <p class="descricao">{{ recurso.descricao }}</p>
+            
+            <div class="tags" *ngIf="recurso.tags.length > 0">
+              <span *ngFor="let tag of recurso.tags" class="tag">
+                <lucide-icon [img]="TagIcon" [size]="12"></lucide-icon>
+                {{ tag.nome }}
+              </span>
+            </div>
+            
+            <a [href]="recurso.url" target="_blank" class="recurso-url">
+              <lucide-icon [img]="Link2Icon" [size]="14"></lucide-icon>
+              {{ recurso.url }}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pagination-wrapper" *ngIf="totalPages > 1">
+      <div class="items-per-page">10 p/página</div>
+      
+      <div class="pagination">
+        <button 
+          *ngFor="let page of getPageNumbers()" 
+          class="page-btn"
+          [class.active]="page === currentPage"
+          (click)="irParaPagina(page)">
+          {{ page }}
+        </button>
+        <span *ngIf="totalPages > 5">...</span>
+      </div>
+    </div>
+  </div>
+  
+  </div> <!-- Fecha lista-content -->
+
+  <a routerLink="/novo" class="fab-button" title="Criar novo recurso">
+    <lucide-icon [img]="PlusIcon" [size]="24"></lucide-icon>
+  </a>
+</div>
