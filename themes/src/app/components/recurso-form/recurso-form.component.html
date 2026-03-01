@@ -1,0 +1,153 @@
+<div class="container">
+  <div class="form-header">
+    <h2>{{ isEditMode ? 'Editar Recurso' : 'Novo Recurso' }}</h2>
+  </div>
+
+  <div *ngIf="loading && isEditMode" class="loading">
+    <p>Carregando recurso...</p>
+  </div>
+
+  <div *ngIf="error" class="alert alert-error">
+    {{ error }}
+  </div>
+
+  <form [formGroup]="recursoForm" (ngSubmit)="salvar()" class="recurso-form">
+    <div class="form-group">
+      <label for="titulo">
+        Título <span class="required">*</span>
+      </label>
+      <input
+        id="titulo"
+        type="text"
+        formControlName="titulo"
+        placeholder="Ex: Vídeo aula de matemática financeira"
+        [class.invalid]="isFieldInvalid('titulo')"
+      />
+      <span *ngIf="isFieldInvalid('titulo')" class="error-message">
+        {{ getFieldError('titulo') }}
+      </span>
+    </div>
+
+    <div class="form-group">
+      <div class="label-with-button">
+        <label for="descricao">
+          Descrição <span class="required">*</span>
+        </label>
+        <button 
+          type="button" 
+          class="btn-generate-ai" 
+          (click)="gerarDescricao()"
+          [disabled]="!podeGerarDescricao() || gerandoDescricao"
+          title="Gerar descrição com IA">
+          <lucide-icon 
+            [img]="gerandoDescricao ? Loader2Icon : SparklesIcon" 
+            [size]="16"
+            [class.spinning]="gerandoDescricao">
+          </lucide-icon>
+          <span *ngIf="!gerandoDescricao">Gerar Descrição.</span>
+          <span *ngIf="gerandoDescricao">Gerando...</span>
+        </button>
+      </div>
+      <textarea
+        id="descricao"
+        formControlName="descricao"
+        rows="4"
+        placeholder="Descreva o conteúdo deste recurso educacional..."
+        [class.invalid]="isFieldInvalid('descricao')"
+      ></textarea>
+      <span *ngIf="isFieldInvalid('descricao')" class="error-message">
+        {{ getFieldError('descricao') }}
+      </span>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="tipo">
+          Tipo <span class="required">*</span>
+        </label>
+        <select
+          id="tipo"
+          formControlName="tipo"
+          [class.invalid]="isFieldInvalid('tipo')"
+        >
+          <option value="video">Vídeo</option>
+          <option value="pdf">PDF</option>
+          <option value="link">Link</option>
+        </select>
+        <span *ngIf="isFieldInvalid('tipo')" class="error-message">
+          {{ getFieldError('tipo') }}
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="url">
+          URL <span class="required">*</span>
+        </label>
+        <input
+          id="url"
+          type="url"
+          formControlName="url"
+          placeholder="https://exemplo.com/recurso"
+          [class.invalid]="isFieldInvalid('url')"
+        />
+        <span *ngIf="isFieldInvalid('url')" class="error-message">
+          {{ getFieldError('url') }}
+        </span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="label-with-button">
+        <label for="tags">Tags</label>
+        <button 
+          type="button" 
+          class="btn-generate-ai btn-generate-tags" 
+          (click)="gerarTags()"
+          [disabled]="!podeGerarTags() || gerandoTags"
+          title="Gerar tags com IA">
+          <lucide-icon 
+            [img]="gerandoTags ? Loader2Icon : SparklesIcon" 
+            [size]="14"
+            [class.spinning]="gerandoTags">
+          </lucide-icon>
+          <span *ngIf="!gerandoTags">Gerar Tags</span>
+          <span *ngIf="gerandoTags">Gerando...</span>
+        </button>
+      </div>
+      <div class="tag-input-container">
+        <input
+          id="tags"
+          type="text"
+          [formControl]="tagInput"
+          placeholder="Digite uma tag e pressione Enter"
+          (keypress)="onTagInputKeyPress($event)"
+        />
+        <button type="button" (click)="adicionarTag()" class="btn-add-tag">
+          <lucide-icon [img]="TagIcon" [size]="16"></lucide-icon>
+          Adicionar
+        </button>
+      </div>
+      
+      <div *ngIf="tags.length > 0" class="tags-list">
+        <span *ngFor="let tag of tags" class="tag">
+          <lucide-icon [img]="TagIcon" [size]="12"></lucide-icon>
+          {{ tag }}
+          <button type="button" (click)="removerTag(tag)" class="tag-remove">
+            <lucide-icon [img]="XIcon" [size]="14"></lucide-icon>
+          </button>
+        </span>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" (click)="cancelar()" class="btn btn-secondary" [disabled]="loading">
+        <lucide-icon [img]="XIcon" [size]="18"></lucide-icon>
+        Cancelar
+      </button>
+      <button type="submit" class="btn btn-primary" [disabled]="loading">
+        <lucide-icon [img]="SaveIcon" [size]="18"></lucide-icon>
+        {{ loading ? 'Salvando...' : (isEditMode ? 'Atualizar' : 'Criar Recurso') }}
+      </button>
+    </div>
+  </form>
+</div>
