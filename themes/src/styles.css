@@ -1,0 +1,95 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: #ffffff;
+  color: #424A54;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 800' preserveAspectRatio='none'%3E%3Cpath fill='%2352E78D' fill-opacity='0.06' d='M0,400L80,380C160,360,320,320,480,310C640,300,800,320,960,340C1120,360,1280,380,1360,390L1440,400L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z'%3E%3C/path%3E%3C/svg%3E") no-repeat top center,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 800' preserveAspectRatio='none'%3E%3Cpath fill='%2352E78D' fill-opacity='0.08' d='M0,200L80,220C160,240,320,280,480,290C640,300,800,280,960,260C1120,240,1280,220,1360,210L1440,200L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z'%3E%3C/path%3E%3C/svg%3E") no-repeat top center;
+  background-size: 100% 100%;
+  z-index: -3;
+  pointer-events: none;
+  animation: wave-top 18s ease-in-out infinite;
+}
+
+@keyframes wave-top {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(20px) scale(1.02); }
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 800' preserveAspectRatio='none'%3E%3Cpath fill='%236c757d' fill-opacity='0.1' d='M0,400L80,420C160,440,320,480,480,490C640,500,800,480,960,450C1120,420,1280,380,1360,360L1440,340L1440,800L1360,800C1280,800,1120,800,960,800C800,800,640,800,480,800C320,800,160,800,80,800L0,800Z'%3E%3C/path%3E%3C/svg%3E") no-repeat bottom center,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 800' preserveAspectRatio='none'%3E%3Cpath fill='%236c757d' fill-opacity='0.05' d='M0,600L80,580C160,560,320,520,480,510C640,500,800,520,960,550C1120,580,1280,620,1360,640L1440,660L1440,800L1360,800C1280,800,1120,800,960,800C800,800,640,800,480,800C320,800,160,800,80,800L0,800Z'%3E%3C/path%3E%3C/svg%3E") no-repeat bottom center;
+  background-size: 100% 100%;
+  z-index: -2;
+  pointer-events: none;
+  animation: wave-bottom 15s ease-in-out infinite;
+}
+
+@keyframes wave-bottom {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-20px) scale(1.02); }
+}
+
+html, body {
+  height: 100%;
+  scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f8f9fa;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #6c757d;
+  border-radius: 10px;
+  border: 2px solid #f8f9fa;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3dc176;
+}
+
+/* Selection */
+::selection {
+  background: rgba(82, 231, 141, 0.2);
+  color: #424A54;
+}
+
+::-moz-selection {
+  background: rgba(82, 231, 141, 0.2);
+  color: #424A54;
+}
