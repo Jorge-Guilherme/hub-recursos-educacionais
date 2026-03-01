@@ -1,0 +1,82 @@
+<div class="container">
+  <div *ngIf="loading" class="loading">
+    <p>Carregando grupo...</p>
+  </div>
+
+  <div *ngIf="error" class="alert alert-error">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!loading && grupo" class="grupo-detail">
+    <div class="header-section">
+      <button class="btn-back" (click)="voltar()">
+        <lucide-icon [img]="ArrowLeftIcon" [size]="20"></lucide-icon>
+        <span>Voltar</span>
+      </button>
+      <div class="header-actions">
+        <button 
+          class="btn btn-secondary" 
+          [routerLink]="['/grupos', grupo.id, 'editar']">
+          <lucide-icon [img]="Edit2Icon" [size]="18"></lucide-icon>
+          Editar
+        </button>
+        <button 
+          class="btn btn-delete" 
+          (click)="excluirGrupo()">
+          <lucide-icon [img]="Trash2Icon" [size]="18"></lucide-icon>
+          Excluir
+        </button>
+      </div>
+    </div>
+
+    <div class="grupo-info">
+      <div class="grupo-icon">
+        <lucide-icon [img]="FolderOpenIcon" [size]="48"></lucide-icon>
+      </div>
+      <div class="grupo-header">
+        <h1>{{ grupo.nome }}</h1>
+        <p class="grupo-descricao" *ngIf="grupo.descricao">{{ grupo.descricao }}</p>
+        <div class="grupo-meta">
+          <span class="meta-badge">
+            <lucide-icon [img]="FileTextIcon" [size]="16"></lucide-icon>
+            {{ grupo.recursos_count }} {{ grupo.recursos_count === 1 ? 'material' : 'materiais' }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="recursos-section">
+      <h2>Materiais do Grupo</h2>
+      
+      <div *ngIf="!grupo.recursos || grupo.recursos.length === 0" class="empty-recursos">
+        <p>Nenhum material neste grupo.</p>
+        <button 
+          class="btn btn-primary" 
+          [routerLink]="['/grupos', grupo.id, 'editar']">
+          Adicionar Materiais
+        </button>
+      </div>
+
+      <div class="recursos-list" *ngIf="grupo.recursos && grupo.recursos.length > 0">
+        <div class="recurso-card" *ngFor="let recurso of grupo.recursos">
+          <div class="recurso-header">
+            <span class="recurso-tipo tipo-{{ recurso.tipo }}">{{ recurso.tipo }}</span>
+          </div>
+          <h3 class="recurso-titulo">{{ recurso.titulo }}</h3>
+          <p class="recurso-descricao" *ngIf="recurso.descricao">
+            {{ recurso.descricao }}
+          </p>
+          <div class="recurso-tags" *ngIf="recurso.tags && recurso.tags.length > 0">
+            <span class="tag" *ngFor="let tag of recurso.tags">
+              <lucide-icon [img]="TagIcon" [size]="12"></lucide-icon>
+              {{ tag }}
+            </span>
+          </div>
+          <a [href]="recurso.url" target="_blank" class="btn-link">
+            Acessar Material
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
