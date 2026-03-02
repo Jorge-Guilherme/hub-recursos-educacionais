@@ -189,9 +189,132 @@ textarea {
   font-size: 0.8rem;
 }
 
+.recommended-tags-section {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  animation: fadeIn 0.3s ease;
+}
+
+.recommended-tags-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.75rem 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #424A54;
+}
+
+.recommended-tags-label lucide-icon {
+  color: #52E78D;
+}
+
+.recommended-tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.recommended-tag {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.9rem;
+  background: white;
+  color: #424A54;
+  border: 1px solid #52E78D;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.recommended-tag:hover {
+  background: #52E78D;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(82, 231, 141, 0.2);
+}
+
+.recommended-tag lucide-icon {
+  flex-shrink: 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .tag-input-container {
   display: flex;
   gap: 0.5rem;
+}
+
+.tag-input-wrapper {
+  position: relative;
+  flex: 1;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tag-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  margin-top: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-height: 240px;
+  overflow-y: auto;
+  z-index: 1000;
+  animation: slideDown 0.2s ease;
+}
+
+.tag-suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  color: #424A54;
+  font-size: 0.9rem;
+}
+
+.tag-suggestion-item:hover {
+  background: #f8f9fa;
+}
+
+.tag-suggestion-item:first-child {
+  border-radius: 6px 6px 0 0;
+}
+
+.tag-suggestion-item:last-child {
+  border-radius: 0 0 6px 6px;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .btn-add-tag {
@@ -319,8 +442,25 @@ textarea {
   .form-row {
     grid-template-columns: 1fr;
   }
+
+  .recommended-tags-section {
+    padding: 0.75rem;
+  }
+
+  .recommended-tags-label {
+    font-size: 0.8rem;
+  }
+
+  .recommended-tag {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.7rem;
+  }
   
   .tag-input-container {
+    flex-direction: column;
+  }
+
+  .tag-input-wrapper {
     flex-direction: column;
   }
   

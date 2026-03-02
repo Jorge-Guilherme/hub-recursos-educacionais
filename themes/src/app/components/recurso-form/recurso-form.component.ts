@@ -5,6 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { RecursoService } from '../../services/recurso.service';
 import { RecursoTipo } from '../../models/recurso.model';
 import { LucideAngularModule, Sparkles, Loader2, Tag, X, Save } from 'lucide-angular';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-recurso-form',
@@ -23,6 +24,10 @@ export class RecursoFormComponent implements OnInit {
   tags: string[] = [];
   gerandoDescricao = false;
   gerandoTags = false;
+  availableTags: string[] = [];
+  suggestedTags: string[] = [];
+  showSuggestions = false;
+  recommendedTags: string[] = [];
 
   readonly SparklesIcon = Sparkles;
   readonly Loader2Icon = Loader2;
@@ -54,6 +59,25 @@ export class RecursoFormComponent implements OnInit {
         this.recursoId = +id;
         this.carregarRecurso(this.recursoId);
       }
+    });
+
+    // Carregar tags disponíveis
+    this.carregarTagsDisponiveis();
+
+    // Configurar sugestões de tags com debounce (no input de tag)
+    this.tagInput.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(value => {
+      this.filtrarSugestoes(value || '');
+    });
+
+    // Configurar recomendações de tags baseadas no título
+    this.recursoForm.get('titulo')?.valueChanges.pipe(
+      debounceTime(500),
+      distinctUntilChanged()
+    ).subscribe(titulo => {
+      this.sugerirTagsPorTitulo(titulo || '');
     });
   }
 
@@ -88,6 +112,109 @@ export class RecursoFormComponent implements OnInit {
 
   removerTag(tag: string): void {
     this.tags = this.tags.filter(t => t !== tag);
+  }
+
+  carregarTagsDisponiveis(): void {
+    // Carregar uma amostra de recursos para extrair tags existentes
+    this.recursoService.listarRecursos(1, 500).subscribe({
+      next: (response) => {
+        const tagsSet = new Set<string>();
+        response.data.forEach(recurso => {
+          recurso.tags.forEach(tag => tagsSet.add(tag.nome));
+        });
+        this.availableTags = Array.from(tagsSet).sort();
+      },
+      error: (err) => {
+        console.error('Erro ao carregar tags disponíveis:', err);
+      }
+    });
+  }
+
+  filtrarSugestoes(input: string): void {
+    const trimmedInput = input.trim().toLowerCase();
+    
+    if (trimmedInput.length < 2) {
+      this.suggestedTags = [];
+      this.showSuggestions = false;
+      return;
+    }
+
+    // Filtrar tags que começam com o input ou contêm o input
+    this.suggestedTags = this.availableTags
+      .filter(tag => {
+        const tagLower = tag.toLowerCase();
+        // Não sugerir tags que já foram adicionadas
+        if (this.tags.includes(tag)) return false;
+        // Priorizar tags que começam com o input
+        return tagLower.startsWith(trimmedInput) || tagLower.includes(trimmedInput);
+      })
+      .slice(0, 8); // Limitar a 8 sugestões
+    
+    this.showSuggestions = this.suggestedTags.length > 0;
+  }
+
+  selecionarSugestao(tag: string): void {
+    if (!this.tags.includes(tag)) {
+      this.tags.push(tag);
+    }
+    this.tagInput.setValue('');
+    this.suggestedTags = [];
+    this.showSuggestions = false;
+  }
+
+  ocultarSugestoes(): void {
+    // Pequeno delay para permitir clique na sugestão
+    setTimeout(() => {
+      this.showSuggestions = false;
+    }, 200);
+  }
+
+  sugerirTagsPorTitulo(titulo: string): void {
+    const tituloTrimmed = titulo.trim().toLowerCase();
+    
+    if (tituloTrimmed.length < 3) {
+      this.recommendedTags = [];
+      return;
+    }
+
+    // Extrair palavras-chave do título (palavras com 3+ caracteres)
+    const palavrasChave = tituloTrimmed
+      .split(/\s+/)
+      .filter(palavra => palavra.length >= 3)
+      .map(palavra => palavra.replace(/[^\w]/g, ''));
+
+    if (palavrasChave.length === 0) {
+      this.recommendedTags = [];
+      return;
+    }
+
+    // Buscar tags que contenham qualquer palavra-chave
+    const tagsRelevantes = new Set<string>();
+    
+    this.availableTags.forEach(tag => {
+      const tagLower = tag.toLowerCase();
+      // Não sugerir tags já adicionadas
+      if (this.tags.includes(tag)) return;
+      
+      // Verificar se a tag contém alguma palavra-chave ou vice-versa
+      for (const palavra of palavrasChave) {
+        if (tagLower.includes(palavra) || palavra.includes(tagLower)) {
+          tagsRelevantes.add(tag);
+          break;
+        }
+      }
+    });
+
+    // Limitar a 6 sugestões
+    this.recommendedTags = Array.from(tagsRelevantes).slice(0, 6);
+  }
+
+  adicionarTagRecomendada(tag: string): void {
+    if (!this.tags.includes(tag)) {
+      this.tags.push(tag);
+      // Remover da lista de recomendadas
+      this.recommendedTags = this.recommendedTags.filter(t => t !== tag);
+    }
   }
 
   onTagInputKeyPress(event: KeyboardEvent): void {

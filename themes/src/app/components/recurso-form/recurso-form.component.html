@@ -114,18 +114,52 @@
           <span *ngIf="gerandoTags">Gerando...</span>
         </button>
       </div>
+
+      <!-- Tags Recomendadas baseadas no título -->
+      <div *ngIf="recommendedTags.length > 0" class="recommended-tags-section">
+        <p class="recommended-tags-label">
+          <lucide-icon [img]="SparklesIcon" [size]="14"></lucide-icon>
+          Sugestões baseadas no título:
+        </p>
+        <div class="recommended-tags-list">
+          <button 
+            type="button"
+            class="recommended-tag"
+            *ngFor="let tag of recommendedTags"
+            (click)="adicionarTagRecomendada(tag)">
+            <lucide-icon [img]="TagIcon" [size]="12"></lucide-icon>
+            {{ tag }}
+          </button>
+        </div>
+      </div>
+
       <div class="tag-input-container">
-        <input
-          id="tags"
-          type="text"
-          [formControl]="tagInput"
-          placeholder="Digite uma tag e pressione Enter"
-          (keypress)="onTagInputKeyPress($event)"
-        />
-        <button type="button" (click)="adicionarTag()" class="btn-add-tag">
-          <lucide-icon [img]="TagIcon" [size]="16"></lucide-icon>
-          Adicionar
-        </button>
+        <div class="tag-input-wrapper">
+          <input
+            id="tags"
+            type="text"
+            [formControl]="tagInput"
+            placeholder="Digite uma tag e pressione Enter"
+            (keypress)="onTagInputKeyPress($event)"
+            (focus)="filtrarSugestoes(tagInput.value || '')"
+            (blur)="ocultarSugestoes()"
+          />
+          <button type="button" (click)="adicionarTag()" class="btn-add-tag">
+            <lucide-icon [img]="TagIcon" [size]="16"></lucide-icon>
+            Adicionar
+          </button>
+          
+          <!-- Sugestões de tags -->
+          <div class="tag-suggestions" *ngIf="showSuggestions && suggestedTags.length > 0">
+            <div 
+              class="tag-suggestion-item"
+              *ngFor="let suggestion of suggestedTags"
+              (mousedown)="selecionarSugestao(suggestion)">
+              <lucide-icon [img]="TagIcon" [size]="12"></lucide-icon>
+              {{ suggestion }}
+            </div>
+          </div>
+        </div>
       </div>
       
       <div *ngIf="tags.length > 0" class="tags-list">
