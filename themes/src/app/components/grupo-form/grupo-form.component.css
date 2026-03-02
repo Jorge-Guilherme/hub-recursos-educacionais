@@ -32,7 +32,7 @@
 
 .alert-success {
   background: #f0fdf4;
-  color: #52E78D;
+  color: #0056B5;
   border: 1px solid #bbf7d0;
 }
 
@@ -73,8 +73,8 @@ form {
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #52E78D;
-  box-shadow: 0 0 0 3px rgba(82, 231, 141, 0.1);
+  border-color: #0056B5;
+  box-shadow: 0 0 0 3px rgba(0, 86, 181, 0.1);
 }
 
 .form-group input.invalid,
@@ -105,7 +105,7 @@ form {
   align-items: center;
   gap: 0.5rem;
   padding: 0.4rem 0.9rem;
-  background: #52E78D;
+  background: #0056B5;
   color: white;
   border: none;
   border-radius: 10px;
@@ -113,13 +113,13 @@ form {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(82, 231, 141, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 86, 181, 0.3);
 }
 
 .btn-generate-ai:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(82, 231, 141, 0.4);
-  background: #3dc176;
+  box-shadow: 0 6px 20px rgba(0, 86, 181, 0.4);
+  background: #004494;
 }
 
 .btn-generate-ai:active:not(:disabled) {
@@ -173,7 +173,7 @@ form {
 }
 
 .empty-recursos a {
-  color: #52E78D;
+  color: #0056B5;
   text-decoration: none;
   font-weight: 600;
 }
@@ -231,12 +231,12 @@ form {
 
 .recurso-item:hover {
   background: #e9ecef;
-  border-color: #52E78D;
+  border-color: #0056B5;
 }
 
 .recurso-item.selected {
-  background: #f0fdf4;
-  border-color: #52E78D;
+  background: #e3f2fd;
+  border-color: #0056B5;
 }
 
 .recurso-checkbox {
@@ -245,7 +245,7 @@ form {
 }
 
 .recurso-checkbox lucide-icon.checked {
-  color: #52E78D;
+  color: #0056B5;
 }
 
 .recurso-info {
@@ -297,10 +297,10 @@ form {
 
 .selected-count {
   padding: 0.75rem 1rem;
-  background: #f0fdf4;
-  border: 1px solid #bbf7d0;
+  background: #e3f2fd;
+  border: 1px solid #90caf9;
   border-radius: 6px;
-  color: #52E78D;
+  color: #0056B5;
   font-weight: 600;
   text-align: center;
 }

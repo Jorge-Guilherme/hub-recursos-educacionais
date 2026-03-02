@@ -153,7 +153,7 @@
   gap: 0.5rem;
   padding: 0.5rem 1rem;
   background: #f0fdf4;
-  color: #52E78D;
+  color: #0056B5;
   border-radius: 20px;
   font-size: 0.9rem;
   font-weight: 600;
@@ -200,7 +200,7 @@
 }
 
 .recurso-card:hover {
-  border-color: #52E78D;
+  border-color: #0056B5;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   transform: translateY(-2px);
 }
@@ -276,7 +276,7 @@
   display: inline-flex;
   align-items: center;
   padding: 0.6rem 1.2rem;
-  background: #52E78D;
+  background: #0056B5;
   color: white;
   text-decoration: none;
   border-radius: 8px;
@@ -286,9 +286,9 @@
 }
 
 .btn-link:hover {
-  background: #3dc176;
+  background: #004494;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(82, 231, 141, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 86, 181, 0.3);
 }
 
 @media (max-width: 768px) {

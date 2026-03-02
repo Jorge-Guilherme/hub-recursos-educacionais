@@ -23,8 +23,8 @@ body::before {
   width: 100%;
   height: 100%;
   background: 
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 800' preserveAspectRatio='none'%3E%3Cpath fill='%2352E78D' fill-opacity='0.06' d='M0,400L80,380C160,360,320,320,480,310C640,300,800,320,960,340C1120,360,1280,380,1360,390L1440,400L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z'%3E%3C/path%3E%3C/svg%3E") no-repeat top center,
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 800' preserveAspectRatio='none'%3E%3Cpath fill='%2352E78D' fill-opacity='0.08' d='M0,200L80,220C160,240,320,280,480,290C640,300,800,280,960,260C1120,240,1280,220,1360,210L1440,200L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z'%3E%3C/path%3E%3C/svg%3E") no-repeat top center;
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 800' preserveAspectRatio='none'%3E%3Cpath fill='%230056B5' fill-opacity='0.06' d='M0,400L80,380C160,360,320,320,480,310C640,300,800,320,960,340C1120,360,1280,380,1360,390L1440,400L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z'%3E%3C/path%3E%3C/svg%3E") no-repeat top center,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 800' preserveAspectRatio='none'%3E%3Cpath fill='%230056B5' fill-opacity='0.08' d='M0,200L80,220C160,240,320,280,480,290C640,300,800,280,960,260C1120,240,1280,220,1360,210L1440,200L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z'%3E%3C/path%3E%3C/svg%3E") no-repeat top center;
   background-size: 100% 100%;
   z-index: -3;
   pointer-events: none;
@@ -80,16 +80,16 @@ html, body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3dc176;
+  background: #004494;
 }
 
 /* Selection */
 ::selection {
-  background: rgba(82, 231, 141, 0.2);
+  background: rgba(0, 86, 181, 0.2);
   color: #424A54;
 }
 
 ::-moz-selection {
-  background: rgba(82, 231, 141, 0.2);
+  background: rgba(0, 86, 181, 0.2);
   color: #424A54;
 }

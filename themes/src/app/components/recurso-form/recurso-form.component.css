@@ -39,7 +39,7 @@
 
 .alert-success {
   background: #f0fdf4;
-  color: #52E78D;
+  color: #0056B5;
   border: 1px solid #bbf7d0;
 }
 
@@ -89,8 +89,8 @@ input:focus,
 textarea:focus,
 select:focus {
   outline: none;
-  border-color: #52E78D;
-  box-shadow: 0 0 0 3px rgba(82, 231, 141, 0.1);
+  border-color: #0056B5;
+  box-shadow: 0 0 0 3px rgba(0, 86, 181, 0.1);
 }
 
 input.invalid,
@@ -133,7 +133,7 @@ textarea {
   align-items: center;
   gap: 0.5rem;
   padding: 0.4rem 0.9rem;
-  background: #52E78D;
+  background: #0056B5;
   color: white;
   border: none;
   border-radius: 10px;
@@ -141,13 +141,13 @@ textarea {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(82, 231, 141, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 86, 181, 0.3);
 }
 
 .btn-generate-ai:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(82, 231, 141, 0.4);
-  background: #3dc176;
+  box-shadow: 0 6px 20px rgba(0, 86, 181, 0.4);
+  background: #004494;
 }
 
 .btn-generate-ai:active:not(:disabled) {
@@ -209,7 +209,7 @@ textarea {
 }
 
 .recommended-tags-label lucide-icon {
-  color: #52E78D;
+  color: #0056B5;
 }
 
 .recommended-tags-list {
@@ -225,7 +225,7 @@ textarea {
   padding: 0.5rem 0.9rem;
   background: white;
   color: #424A54;
-  border: 1px solid #52E78D;
+  border: 1px solid #0056B5;
   border-radius: 6px;
   font-size: 0.85rem;
   font-weight: 500;
@@ -234,10 +234,10 @@ textarea {
 }
 
 .recommended-tag:hover {
-  background: #52E78D;
+  background: #0056B5;
   color: white;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(82, 231, 141, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 86, 181, 0.2);
 }
 
 .recommended-tag lucide-icon {

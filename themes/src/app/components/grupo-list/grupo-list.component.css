@@ -23,7 +23,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background: #52E78D;
+  background: #0056B5;
   color: white;
   border: none;
   border-radius: 8px;
@@ -34,9 +34,9 @@
 }
 
 .btn-create:hover {
-  background: #3dc176;
+  background: #004494;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(82, 231, 141, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 86, 181, 0.3);
 }
 
 .loading,
@@ -86,7 +86,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 1rem 2rem;
-  background: #52E78D;
+  background: #0056B5;
   color: white;
   border: none;
   border-radius: 8px;
@@ -97,9 +97,9 @@
 }
 
 .btn-create-large:hover {
-  background: #3dc176;
+  background: #004494;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(82, 231, 141, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 86, 181, 0.3);
 }
 
 .grupos-grid {
@@ -122,7 +122,7 @@
 .grupo-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-  border-color: #52E78D;
+  border-color: #0056B5;
 }
 
 .card-header {
@@ -141,7 +141,7 @@
   height: 56px;
   background: #f0fdf4;
   border-radius: 10px;
-  color: #52E78D;
+  color: #0056B5;
 }
 
 .card-actions {
@@ -216,7 +216,7 @@
 }
 
 .meta-item lucide-icon {
-  color: #52E78D;
+  color: #0056B5;
 }
 
 .card-footer {
