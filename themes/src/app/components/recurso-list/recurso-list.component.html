@@ -157,7 +157,15 @@
               [size]="20">
             </lucide-icon>
           </div>
-          <div class="recurso-title" (click)="toggleRecurso(recurso.id)">{{ recurso.titulo }}</div>
+          <div class="recurso-content">
+            <div class="recurso-title" (click)="toggleRecurso(recurso.id)">{{ recurso.titulo }}</div>
+            <div class="recurso-tags-preview" *ngIf="recurso.tags.length > 0">
+              <span *ngFor="let tag of recurso.tags.slice(0, 5); trackBy: trackById" class="tag-preview">
+                #{{ tag.nome }}
+              </span>
+              <span *ngIf="recurso.tags.length > 5" class="tag-preview-more">+{{ recurso.tags.length - 5 }}</span>
+            </div>
+          </div>
           <div class="recurso-indicators">
             <button 
               class="action-btn edit" 
