@@ -25,9 +25,12 @@ class EloquentGrupoRepository extends EloquentRepository implements GrupoReposit
 
     public function findWithRecursos(int $id): ?array
     {
-        $grupo = $this->model->with(['recursos' => function ($query) {
-            $query->orderBy('created_at', 'desc');
-        }, 'recursos.tags'])->find($id);
+        $grupo = $this->model
+            ->withCount('recursos')
+            ->with(['recursos' => function ($query) {
+                $query->orderBy('created_at', 'desc');
+            }, 'recursos.tags'])
+            ->find($id);
         
         if (!$grupo) {
             return null;
