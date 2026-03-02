@@ -69,7 +69,7 @@
           <div class="recurso-tags" *ngIf="recurso.tags && recurso.tags.length > 0">
             <span class="tag" *ngFor="let tag of recurso.tags">
               <lucide-icon [img]="TagIcon" [size]="12"></lucide-icon>
-              {{ tag }}
+              {{ tag.nome }}
             </span>
           </div>
           <a [href]="recurso.url" target="_blank" class="btn-link">

@@ -91,8 +91,8 @@ class EloquentRecursoRepository extends EloquentRepository implements RecursoRep
         
         if (!empty($search)) {
             $query->where(function ($q) use ($search) {
-                $q->where('titulo', 'LIKE', "%{$search}%")
-                  ->orWhere('descricao', 'LIKE', "%{$search}%");
+                $q->where('titulo', 'ILIKE', "%{$search}%")
+                  ->orWhere('descricao', 'ILIKE', "%{$search}%");
             });
         }
         
@@ -124,8 +124,8 @@ class EloquentRecursoRepository extends EloquentRepository implements RecursoRep
         return $this->model
             ->with('tags')
             ->where(function ($q) use ($query) {
-                $q->where('titulo', 'LIKE', "%{$query}%")
-                  ->orWhere('descricao', 'LIKE', "%{$query}%");
+                $q->where('titulo', 'ILIKE', "%{$query}%")
+                  ->orWhere('descricao', 'ILIKE', "%{$query}%");
             })
             ->orderBy('created_at', 'desc')
             ->get()

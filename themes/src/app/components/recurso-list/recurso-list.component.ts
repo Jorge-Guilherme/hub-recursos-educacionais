@@ -21,6 +21,10 @@ export class RecursoListComponent implements OnInit {
   currentPage = 1;
   totalPages = 1;
   total = 0;
+  videoCount = 0;
+  pdfCount = 0;
+  linkCount = 0;
+  countsLoaded = false;
   expandedRecursos: Set<number> = new Set();
   activeTab: 'lista' | 'grupos' = 'lista';
   searchTerm: string = '';
@@ -47,12 +51,6 @@ export class RecursoListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      if (params['tab'] === 'grupos') {
-        this.activeTab = 'grupos';
-      }
-    });
-    
     this.carregarRecursos();
     this.carregarTagsDisponiveis();
   }
@@ -73,6 +71,7 @@ export class RecursoListComponent implements OnInit {
         this.currentPage = response.current_page;
         this.totalPages = response.last_page;
         this.total = response.total;
+        this.calcularContagemPorTipo();
         this.loading = false;
       },
       error: (err) => {
@@ -94,6 +93,24 @@ export class RecursoListComponent implements OnInit {
       },
       error: (err) => {
         console.error('Erro ao carregar tags:', err);
+      }
+    });
+  }
+
+  calcularContagemPorTipo(): void {
+    if (this.countsLoaded) {
+      return;
+    }
+    
+    this.recursoService.listarRecursos(1, 10000).subscribe({
+      next: (response) => {
+        this.videoCount = response.data.filter(r => r.tipo === 'video').length;
+        this.pdfCount = response.data.filter(r => r.tipo === 'pdf').length;
+        this.linkCount = response.data.filter(r => r.tipo === 'link').length;
+        this.countsLoaded = true;
+      },
+      error: (err) => {
+        console.error('Erro ao calcular contagem por tipo:', err);
       }
     });
   }
@@ -138,6 +155,25 @@ export class RecursoListComponent implements OnInit {
 
   isExpanded(id: number): boolean {
     return this.expandedRecursos.has(id);
+  }
+
+  trackByRecursoId(index: number, recurso: Recurso): number {
+    return recurso.id;
+  }
+
+  trackById(index: number, item: any): number {
+    return item.id;
+  }
+
+  getIconForTipo(tipo: string): any {
+    switch (tipo) {
+      case 'video':
+        return this.VideoIcon;
+      case 'pdf':
+        return this.FileTextIcon;
+      default:
+        return this.Link2Icon;
+    }
   }
 
   onSearch(): void {

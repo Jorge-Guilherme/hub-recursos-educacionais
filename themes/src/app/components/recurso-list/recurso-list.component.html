@@ -5,6 +5,23 @@
       <span class="counter-number">{{ total }}</span>
       <span class="counter-label">{{ total === 1 ? 'material cadastrado' : 'materiais cadastrados' }}</span>
     </div>
+    <div class="materials-breakdown">
+      <div class="breakdown-item">
+        <lucide-icon [img]="VideoIcon" [size]="16" class="breakdown-icon"></lucide-icon>
+        <span class="breakdown-count">{{ videoCount }}</span>
+        <span class="breakdown-label">{{ videoCount === 1 ? 'vídeo' : 'vídeos' }}</span>
+      </div>
+      <div class="breakdown-item">
+        <lucide-icon [img]="FileTextIcon" [size]="16" class="breakdown-icon"></lucide-icon>
+        <span class="breakdown-count">{{ pdfCount }}</span>
+        <span class="breakdown-label">{{ pdfCount === 1 ? 'PDF' : 'PDFs' }}</span>
+      </div>
+      <div class="breakdown-item">
+        <lucide-icon [img]="Link2Icon" [size]="16" class="breakdown-icon"></lucide-icon>
+        <span class="breakdown-count">{{ linkCount }}</span>
+        <span class="breakdown-label">{{ linkCount === 1 ? 'link' : 'links' }}</span>
+      </div>
+    </div>
   </div>
 
   <div class="tabs-container">
@@ -132,11 +149,11 @@
 
   <div class="content-wrapper" *ngIf="activeTab === 'lista'">
     <div *ngIf="!loading && recursos.length > 0" class="recursos-list">
-      <div *ngFor="let recurso of recursos" class="recurso-item">
+      <div *ngFor="let recurso of recursos; trackBy: trackByRecursoId" class="recurso-item">
         <div class="recurso-main">
           <div class="recurso-tipo-icon">
             <lucide-icon 
-              [img]="recurso.tipo === 'video' ? VideoIcon : recurso.tipo === 'pdf' ? FileTextIcon : Link2Icon" 
+              [img]="getIconForTipo(recurso.tipo)" 
               [size]="20">
             </lucide-icon>
           </div>
@@ -170,7 +187,7 @@
             <p class="descricao">{{ recurso.descricao }}</p>
             
             <div class="tags" *ngIf="recurso.tags.length > 0">
-              <span *ngFor="let tag of recurso.tags" class="tag">
+              <span *ngFor="let tag of recurso.tags; trackBy: trackById" class="tag">
                 <lucide-icon [img]="TagIcon" [size]="12"></lucide-icon>
                 {{ tag.nome }}
               </span>

@@ -58,6 +58,52 @@
   color: rgba(255, 255, 255, 0.95);
 }
 
+/* Materials Breakdown */
+.materials-breakdown {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.75rem 1.25rem;
+  background: rgba(66, 74, 84, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(66, 74, 84, 0.1);
+}
+
+.breakdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.75rem;
+  background: white;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.breakdown-item:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(66, 74, 84, 0.12);
+}
+
+.breakdown-icon {
+  color: #6c757d;
+  flex-shrink: 0;
+}
+
+.breakdown-count {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #424A54;
+  min-width: 24px;
+  text-align: center;
+}
+
+.breakdown-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #6c757d;
+  white-space: nowrap;
+}
+
 /* Tabs Container */
 .tabs-container {
   display: inline-flex;
@@ -403,6 +449,7 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  contain: layout style;
 }
 
 .recurso-item {
@@ -414,6 +461,8 @@
   position: relative;
   animation: slideInUp 0.5s ease-out backwards;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  contain: layout style paint;
+  will-change: transform;
 }
 
 @keyframes slideInUp {
@@ -426,18 +475,6 @@
     transform: translateY(0);
   }
 }
-
-/* Staggered animation for list items */
-.recurso-item:nth-child(1) { animation-delay: 0.05s; }
-.recurso-item:nth-child(2) { animation-delay: 0.1s; }
-.recurso-item:nth-child(3) { animation-delay: 0.15s; }
-.recurso-item:nth-child(4) { animation-delay: 0.2s; }
-.recurso-item:nth-child(5) { animation-delay: 0.25s; }
-.recurso-item:nth-child(6) { animation-delay: 0.3s; }
-.recurso-item:nth-child(7) { animation-delay: 0.35s; }
-.recurso-item:nth-child(8) { animation-delay: 0.4s; }
-.recurso-item:nth-child(9) { animation-delay: 0.45s; }
-.recurso-item:nth-child(10) { animation-delay: 0.5s; }
 
 .recurso-item::before {
   content: '';
@@ -884,6 +921,24 @@
 
   .main-header h1 {
     font-size: 1.75rem;
+  }
+
+  .materials-breakdown {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .breakdown-item {
+    padding: 0.25rem 0.5rem;
+  }
+
+  .breakdown-count {
+    font-size: 1rem;
+  }
+
+  .breakdown-label {
+    font-size: 0.75rem;
   }
 
   .items-per-page {
