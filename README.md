@@ -7,6 +7,8 @@ Sistema fullstack para gerenciamento de recursos educacionais (vídeos, PDFs, li
 
 **Obs:** Como consegui finalizar o projeto com uma certa agilidade, achei interessante fazer o deploy. Utilizei o Oracle Cloud, pois oferecia uma versão gratuita de uma VM. 
 
+**Obs 2:** As funcionalidades extras foram criadas pensando numa futura integração com outros módulos. Pensei na plataforma como uma biblioteca digital, onde possamos ter um estilo de "Google Classroom". Isso nos permite adicionar conexão com turmas, disciplinas, etc.
+
 ---
 
 ## Documentação
