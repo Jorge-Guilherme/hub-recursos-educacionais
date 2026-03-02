@@ -603,15 +603,15 @@
 }
 
 .action-btn.edit {
-  border-color: #4CAF50;
-  color: #4CAF50;
+  border-color: #6c757d;
+  color: #6c757d;
 }
 
 .action-btn.edit:hover {
-  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
   color: white;
   transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.3);
+  box-shadow: 0 6px 16px rgba(108, 117, 125, 0.3);
 }
 
 .action-btn.delete {
@@ -882,9 +882,9 @@
 }
 
 .alert-success {
-  background: #f0fdf4;
+  background: #e3f2fd;
   color: #0056B5;
-  border: 1px solid #bbf7d0;
+  border: 1px solid #90caf9;
 }
 
 /* Buttons */
