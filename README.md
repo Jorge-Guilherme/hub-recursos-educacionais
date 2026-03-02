@@ -1,203 +1,121 @@
-# Hub Recursos Educacionais
+# Hub de Recursos Educacionais
 
-Plataforma de gestão de recursos educacionais desenvolvida com Laravel (source) e Angular (themes).
+Sistema fullstack para gerenciamento de recursos educacionais (vídeos, PDFs, links) com integração de IA para geração automática de descrições e tags.
 
-## Arquitetura
+**Desenvolvido como desafio técnico para vaga de estágio**
 
-Este projeto segue os princípios de **Clean Architecture** e **SOLID**:
 
-### Estrutura de Camadas
+**Obs:** Como consegui finalizar o projeto com uma certa agilidade, achei interessante fazer o deploy. Utilizei o Oracle Cloud, pois oferecia uma versão gratuita de uma VM. 
 
-```
-source/
-├── Domain/              # Regras de negócio (Entities, Value Objects)
-├── Application/         # Casos de uso, DTOs, Services
-├── Infrastructure/      # Implementações (Repositories, HTTP, External)
-└── app/                 # Laravel framework
+---
 
-themes/
-└── Angular application
-```
+## Documentação
 
-### Princípios SOLID
+- **[API Documentation](API_DOCUMENTATION.md)** - Documentação completa da API REST com todos os endpoints
+- **[Architecture](ARCHITECTURE.md)** - Explicação detalhada da arquitetura geral, Clean Architecture e SOLID
 
-- **S**ingle Responsibility: Cada classe tem uma única responsabilidade
-- **O**pen/Closed: Aberto para extensão, fechado para modificação
-- **L**iskov Substitution: Substituição transparente de abstrações
-- **I**nterface Segregation: Interfaces específicas e coesas
-- **D**ependency Inversion: Dependência de abstrações, não implementações
+---
 
-## Tecnologias
+## Como Executar
 
-- **Source**: Laravel 11.x + PHP 8.3
-- **Themes**: Angular 17.x
-- **Banco de Dados**: PostgreSQL 16
-- **Containerização**: Docker & Docker Compose
-- **CI/CD**: GitHub Actions
-- **Linting**: Laravel Pint + PHP_CodeSniffer
-
-## Pré-requisitos
+### Pré-requisitos
 
 - Docker >= 24.0
 - Docker Compose >= 2.20
-- Git
 
-## Setup
+### Passos
 
-### Rápido
-
+1. **Clone o repositório:**
 ```bash
-chmod +x setup.sh && ./setup.sh
+git clone https://github.com/Jorge-Guilherme/hub-recursos-educacionais.git
+cd hub-recursos-educacionais
 ```
 
-### Manual
-
+2. **Configure as variáveis de ambiente:**
 ```bash
-# Source (Laravel)
+# Backend (Laravel)
 cd source
-composer create-project laravel/laravel .
-composer install
 cp .env.example .env
-php artisan key:generate
-
-# Themes (Angular)
-cd ../themes
-npm install -g @angular/cli
-ng new . --routing --style=scss --skip-git
-npm install
-
-# Iniciar
+# Edite o .env e adicione sua GEMINI_API_KEY
 cd ..
+```
+
+3. **Suba os containers:**
+```bash
 docker-compose up -d
 ```
 
-## Acessar
-
-- **Themes (Angular)**: http://localhost:4200
-- **Source API**: http://localhost:8000
-- **API Health**: http://localhost:8000/api/health
-- **PostgreSQL**: localhost:5432
-
-## Integração com Gemini AI
-
-O projeto inclui integração com Google Gemini AI para geração automática de descrições de recursos educacionais.
-
-### Configuração
-
-1. Obtenha uma chave de API do Gemini:
-   - Acesse [Google AI Studio](https://makersuite.google.com/app/apikey)
-   - Crie uma nova chave de API
-
-2. Configure a variável de ambiente no backend:
+4. **Execute as migrations:**
 ```bash
-cd source
-echo "GEMINI_API_KEY=sua-chave-aqui" >> .env
+docker-compose exec backend php artisan migrate
 ```
 
-3. Reinicie o container do backend:
-```bash
-docker-compose restart backend
-```
+5. **Acesse a aplicação:**
+- **Frontend:** http://localhost:4200
+- **API:** http://localhost:8000/api/v1
+- **Health Check:** http://localhost:8000/api/v1/health
 
-### Uso
+---
 
-### Endpoint
+## Tecnologias Utilizadas
 
-```http
-POST /api/v1/recursos/gerar-descricao
-Content-Type: application/json
+### Backend
+- **Laravel 11** - Framework PHP
+- **PHP 8.3** - Linguagem
+- **PostgreSQL 16** - Banco de dados relacional
+- **Google Gemini AI** - Geração de descrições e tags
+- **Clean Architecture** - Separação em camadas (Domain, Application, Infrastructure)
+- **SOLID** - Princípios de design
 
-{
-  "titulo": "Tutorial de Laravel",
-  "tipo": "video",
-  "url": "https://youtube.com/..."
-}
-```
+### Frontend
+- **Angular 17** - Framework frontend
+- **TypeScript** - Linguagem
+- **Standalone Components** - Arquitetura moderna do Angular
+- **Lucide Icons** - Biblioteca de ícones
+- **Reactive Forms** - Gerenciamento de formulários
 
-Resposta:
-```json
-{
-  "descricao": "Descrição gerada pela IA..."
-}
-```
+### DevOps
+- **Docker & Docker Compose** - Containerização
+- **Nginx** - Servidor web
+- **GitHub Actions** - CI/CD
 
-## Testes e Qualidade
+---
 
-### Linting
+## Funcionalidades
 
-```bash
-# Pint
-docker-compose exec backend ./vendor/bin/pint
+- CRUD completo de recursos educacionais -> Feature obrigatória
+- Organização em grupos temáticos -> Feature extra
+- Geração de descrições com IA (Google Gemini) -> Feature obrigatória
+- Geração de tags com IA -> Feature extra
+- Busca e filtros avançados -> Feature extra
+- Paginação -> Feature obrigatória
+- CI/CD -> Feature Bônus
+- Observabilidade -> Feature Bônus
 
-# PHPCS
-docker-compose exec backend ./vendor/bin/phpcs
-```
+---
 
-### Testes
-
-```bash
-docker-compose exec backend php artisan test
-```
-
-## GitHub Actions
-
-Workflows automáticos:
-- **Laravel Pint**: Verifica formatação
-- **PHP_CodeSniffer**: Verifica padrões PSR-12
-
-## Estrutura
+## Estrutura do Projeto
 
 ```
 hub-recursos-educacionais/
-├── source/              # Laravel + Clean Architecture
-│   ├── Domain/
-│   ├── Application/
-│   ├── Infrastructure/
-│   └── app/
-├── themes/              # Angular
-├── .github/workflows/   # CI/CD
-└── docker-compose.yml
+├── source/              # Backend (Laravel + Clean Architecture)
+│   ├── app/
+│   │   ├── Domain/          # Regras de negócio puras
+│   │   ├── Application/     # Casos de uso
+│   │   └── Infrastructure/  # Implementações concretas
+│   └── database/
+│
+├── themes/              # Frontend (Angular)
+│   └── src/
+│       ├── app/
+│       │   ├── components/  # Componentes standalone
+│       │   ├── services/    # Serviços de API
+│       │   └── models/      # Interfaces TypeScript
+│       └── styles/          # Design system
+│
+└── docker-compose.yml   # Orquestração dos containers
 ```
 
-## Comandos Docker
+---
 
-```bash
-make up            # Iniciar
-make down          # Parar
-make logs          # Ver logs
-make pint          # Executar linter
-make test          # Executar testes
-```
-
-## Desenvolvimento
-
-### Source (Laravel)
-
-```bash
-# Controller
-docker-compose exec backend php artisan make:controller NomeController
-
-# Model
-docker-compose exec backend php artisan make:model Nome -m
-
-# Migration
-docker-compose exec backend php artisan make:migration create_table
-
-# UseCase (Clean Architecture)
-# Criar em: source/Application/UseCases/
-```
-
-### Themes (Angular)
-
-```bash
-# Componente
-docker-compose exec frontend ng g component components/nome
-
-# Serviço
-docker-compose exec frontend ng g service services/nome
-
-# Módulo
-docker-compose exec frontend ng g module modules/nome --routing
-```
-
-Siga os princípios **SOLID** e **Clean Architecture**.
+## Vídoe do projeto funcionando
