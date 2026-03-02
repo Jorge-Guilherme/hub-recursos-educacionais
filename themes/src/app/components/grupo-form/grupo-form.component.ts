@@ -171,7 +171,7 @@ export class GrupoFormComponent implements OnInit {
         this.loading = false;
         setTimeout(() => {
           this.router.navigate(['/'], { queryParams: { tab: 'grupos' } });
-        }, 1500);
+        }, 300);
       },
       error: (err) => {
         this.error = 'Erro ao salvar grupo. Verifique os dados e tente novamente.';
