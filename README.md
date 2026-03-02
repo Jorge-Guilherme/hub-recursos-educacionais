@@ -120,4 +120,4 @@ hub-recursos-educacionais/
 
 ---
 
-## Vídoe do projeto funcionando
+## Vídeo do projeto funcionando
