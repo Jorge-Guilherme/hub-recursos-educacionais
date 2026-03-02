@@ -9,6 +9,7 @@ use Application\UseCases\Grupo\CreateGrupo;
 use Application\UseCases\Grupo\UpdateGrupo;
 use Application\UseCases\Grupo\DeleteGrupo;
 use Application\UseCases\Grupo\SyncGrupoRecursos;
+use Application\Services\GeminiService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -20,6 +21,7 @@ class GrupoController extends Controller
     private UpdateGrupo $updateGrupo;
     private DeleteGrupo $deleteGrupo;
     private SyncGrupoRecursos $syncGrupoRecursos;
+    private GeminiService $geminiService;
 
     public function __construct(
         GetAllGrupos $getAllGrupos,
@@ -27,7 +29,8 @@ class GrupoController extends Controller
         CreateGrupo $createGrupo,
         UpdateGrupo $updateGrupo,
         DeleteGrupo $deleteGrupo,
-        SyncGrupoRecursos $syncGrupoRecursos
+        SyncGrupoRecursos $syncGrupoRecursos,
+        GeminiService $geminiService
     ) {
         $this->getAllGrupos = $getAllGrupos;
         $this->getGrupoById = $getGrupoById;
@@ -35,6 +38,7 @@ class GrupoController extends Controller
         $this->updateGrupo = $updateGrupo;
         $this->deleteGrupo = $deleteGrupo;
         $this->syncGrupoRecursos = $syncGrupoRecursos;
+        $this->geminiService = $geminiService;
     }
 
     public function index(): JsonResponse
@@ -184,6 +188,49 @@ class GrupoController extends Controller
             return response()->json([
                 'error' => 'Erro ao excluir grupo',
                 'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function gerarDescricao(Request $request): JsonResponse
+    {
+        try {
+            $validated = $request->validate([
+                'nome' => 'required|string|max:255',
+            ]);
+
+            $descricao = $this->geminiService->gerarDescricaoGrupo($validated['nome']);
+
+            return response()->json([
+                'descricao' => $descricao
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'error' => 'Dados inválidos',
+                'messages' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            $message = $e->getMessage();
+            
+            if (str_contains($message, '|')) {
+                [$code, $userMessage] = explode('|', $message, 2);
+                $statusCode = match($code) {
+                    'RATE_LIMIT' => 429,
+                    'AUTH_ERROR' => 401,
+                    'BAD_REQUEST' => 400,
+                    'SERVER_ERROR' => 503,
+                    default => 500
+                };
+                
+                return response()->json([
+                    'error' => 'Erro ao gerar descrição com IA',
+                    'message' => $userMessage
+                ], $statusCode);
+            }
+
+            return response()->json([
+                'error' => 'Erro ao gerar descrição',
+                'message' => $message
             ], 500);
         }
     }

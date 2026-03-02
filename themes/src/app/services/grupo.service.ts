@@ -37,4 +37,10 @@ export class GrupoService {
       recurso_ids: recursoIds
     });
   }
+
+  gerarDescricao(nome: string): Observable<{ descricao: string }> {
+    return this.apiService.post<{ descricao: string }>(`${this.endpoint}/gerar-descricao`, {
+      nome
+    });
+  }
 }

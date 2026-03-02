@@ -176,6 +176,151 @@ PROMPT;
     }
 
     /**
+     * Gera uma descrição para um grupo de recursos educacionais
+     *
+     * @param string $nome Nome do grupo
+     * @return string Descrição gerada
+     * @throws \Exception
+     */
+    public function gerarDescricaoGrupo(string $nome): string
+    {
+        if (empty($this->apiKey)) {
+            throw new \Exception('Chave da API do Gemini não configurada');
+        }
+
+        $prompt = $this->construirPromptGrupo($nome);
+        $startTime = microtime(true);
+
+        Log::info('[AI Request] Iniciando geração de descrição de grupo', [
+            'action' => 'gerar_descricao_grupo',
+            'nome' => $nome,
+        ]);
+
+        try {
+            $response = Http::timeout(30)
+                ->post($this->apiUrl . '?key=' . $this->apiKey, [
+                    'contents' => [
+                        [
+                            'parts' => [
+                                ['text' => $prompt]
+                            ]
+                        ]
+                    ],
+                    'generationConfig' => [
+                        'temperature' => 0.7,
+                        'maxOutputTokens' => 1024,
+                        'topP' => 0.9,
+                        'topK' => 40,
+                    ]
+                ]);
+
+            $latency = round((microtime(true) - $startTime) * 1000, 2);
+
+            if (!$response->successful()) {
+                $status = $response->status();
+                $body = $response->body();
+                
+                Log::error('[AI Request] Erro na API do Gemini ao gerar descrição de grupo', [
+                    'action' => 'gerar_descricao_grupo',
+                    'nome' => $nome,
+                    'status' => $status,
+                    'latency_ms' => $latency,
+                    'error_body' => $body
+                ]);
+                
+                $errorMessage = match(true) {
+                    $status === 429 => 'RATE_LIMIT|Muitas requisições. Aguarde alguns segundos e tente novamente.',
+                    $status === 401 || $status === 403 => 'AUTH_ERROR|Erro de autenticação com a API de IA. Verifique a chave da API.',
+                    $status === 400 => 'BAD_REQUEST|Requisição inválida para a API de IA.',
+                    $status >= 500 => 'SERVER_ERROR|Erro temporário no servidor de IA. Tente novamente em alguns instantes.',
+                    default => 'UNKNOWN_ERROR|Erro ao comunicar com a API de IA.'
+                };
+                
+                throw new \Exception($errorMessage);
+            }
+
+            $data = $response->json();
+            
+            if (!isset($data['candidates'][0]['content']['parts'][0]['text'])) {
+                throw new \Exception('Resposta inesperada da API do Gemini');
+            }
+
+            $description = trim($data['candidates'][0]['content']['parts'][0]['text']);
+            
+            $promptTokens = $data['usageMetadata']['promptTokenCount'] ?? null;
+            $completionTokens = $data['usageMetadata']['candidatesTokenCount'] ?? null;
+            $totalTokens = $data['usageMetadata']['totalTokenCount'] ?? null;
+
+            Log::info('[AI Request] Descrição de grupo gerada com sucesso', [
+                'action' => 'gerar_descricao_grupo',
+                'nome' => $nome,
+                'status' => 'success',
+                'latency_ms' => $latency,
+                'latency_s' => round($latency / 1000, 2),
+                'prompt_tokens' => $promptTokens,
+                'completion_tokens' => $completionTokens,
+                'total_tokens' => $totalTokens,
+                'text_length' => strlen($description),
+            ]);
+
+            return $description;
+
+        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+            $latency = round((microtime(true) - $startTime) * 1000, 2);
+            
+            Log::error('[AI Request] Erro de conexão com Gemini ao gerar descrição de grupo', [
+                'action' => 'gerar_descricao_grupo',
+                'nome' => $nome,
+                'status' => 'connection_error',
+                'latency_ms' => $latency,
+                'error' => $e->getMessage()
+            ]);
+            
+            throw new \Exception('Erro de conexão com a API do Gemini');
+        } catch (\Exception $e) {
+            $latency = round((microtime(true) - $startTime) * 1000, 2);
+            
+            if (!str_contains($e->getMessage(), '|')) {
+                Log::error('[AI Request] Erro ao gerar descrição de grupo', [
+                    'action' => 'gerar_descricao_grupo',
+                    'nome' => $nome,
+                    'status' => 'error',
+                    'latency_ms' => $latency,
+                    'error' => $e->getMessage()
+                ]);
+            }
+            
+            throw $e;
+        }
+    }
+
+    /**
+     * Constrói o prompt para gerar descrição de grupo
+     */
+    private function construirPromptGrupo(string $nome): string
+    {
+        $prompt = <<<PROMPT
+Crie uma descrição educacional ENVOLVENTE e COMPLETA para o grupo de materiais didáticos "{$nome}".
+
+Este é um agrupamento de diversos recursos educacionais (vídeos, PDFs, sites) organizados em torno de um tema ou objetivo específico.
+
+Escreva 1 parágrafo curto de 80 palavras no total incluindo:
+- Objetivo do grupo de estudos
+- Tipo de conteúdo que pode conter
+- Quem pode se beneficiar deste agrupamento
+- Relevância para o aprendizado
+
+Tom: Profissional mas acolhedor. Português brasileiro.
+NÃO use formatação, bullet points ou repita o nome do grupo.
+FINALIZE o texto com ponto final. Texto deve estar COMPLETO.
+
+Descrição:
+PROMPT;
+
+        return $prompt;
+    }
+
+    /**
      * Gera tags relevantes para um recurso educacional
      *
      * @param string $titulo Título do recurso

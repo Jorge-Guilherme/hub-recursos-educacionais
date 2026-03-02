@@ -51,6 +51,15 @@ export class RecursoListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      const tab = params['tab'];
+      if (tab === 'grupos') {
+        this.activeTab = 'grupos';
+      } else {
+        this.activeTab = 'lista';
+      }
+    });
+
     this.carregarRecursos();
     this.carregarTagsDisponiveis();
   }

@@ -112,7 +112,7 @@ export class GrupoFormComponent implements OnInit {
     this.error = null;
 
     const nome = this.grupoForm.get('nome')?.value;
-    this.recursoService.gerarDescricao(nome, 'link', null).subscribe({
+    this.grupoService.gerarDescricao(nome).subscribe({
       next: (response) => {
         this.grupoForm.patchValue({
           descricao: response.descricao

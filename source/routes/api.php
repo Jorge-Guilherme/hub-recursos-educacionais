@@ -20,6 +20,7 @@ Route::prefix('v1')->group(function () {
     Route::post('recursos/gerar-tags', [RecursoController::class, 'gerarTags']);
     Route::apiResource('recursos', RecursoController::class);
     
+    Route::post('grupos/gerar-descricao', [GrupoController::class, 'gerarDescricao']);
     Route::post('grupos/{id}/sync-recursos', [GrupoController::class, 'syncRecursos']);
     Route::apiResource('grupos', GrupoController::class);
 });
