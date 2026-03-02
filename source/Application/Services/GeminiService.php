@@ -31,6 +31,14 @@ class GeminiService
         }
 
         $prompt = $this->construirPrompt($titulo, $tipo, $url);
+        $startTime = microtime(true);
+
+        Log::info('[AI Request] Iniciando geração de descrição', [
+            'action' => 'gerar_descricao',
+            'titulo' => $titulo,
+            'tipo' => $tipo,
+            'url' => $url,
+        ]);
 
         try {
             $response = Http::timeout(30)
@@ -50,13 +58,19 @@ class GeminiService
                     ]
                 ]);
 
+            $latency = round((microtime(true) - $startTime) * 1000, 2);
+
             if (!$response->successful()) {
                 $status = $response->status();
                 $body = $response->body();
                 
-                Log::error('Erro na API do Gemini', [
+                Log::error('[AI Request] Erro na API do Gemini', [
+                    'action' => 'gerar_descricao',
+                    'titulo' => $titulo,
+                    'tipo' => $tipo,
                     'status' => $status,
-                    'body' => $body
+                    'latency_ms' => $latency,
+                    'error_body' => $body
                 ]);
                 
                 $errorMessage = match(true) {
@@ -76,13 +90,54 @@ class GeminiService
                 throw new \Exception('Resposta inesperada da API do Gemini');
             }
 
-            return trim($data['candidates'][0]['content']['parts'][0]['text']);
+            $description = trim($data['candidates'][0]['content']['parts'][0]['text']);
+            
+            $promptTokens = $data['usageMetadata']['promptTokenCount'] ?? null;
+            $completionTokens = $data['usageMetadata']['candidatesTokenCount'] ?? null;
+            $totalTokens = $data['usageMetadata']['totalTokenCount'] ?? null;
+
+            Log::info('[AI Request] Descrição gerada com sucesso', [
+                'action' => 'gerar_descricao',
+                'titulo' => $titulo,
+                'tipo' => $tipo,
+                'status' => 'success',
+                'latency_ms' => $latency,
+                'latency_s' => round($latency / 1000, 2),
+                'prompt_tokens' => $promptTokens,
+                'completion_tokens' => $completionTokens,
+                'total_tokens' => $totalTokens,
+                'description_length' => strlen($description),
+            ]);
+
+            return $description;
 
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error('Erro de conexão com Gemini', ['error' => $e->getMessage()]);
+            $latency = round((microtime(true) - $startTime) * 1000, 2);
+            
+            Log::error('[AI Request] Erro de conexão com Gemini', [
+                'action' => 'gerar_descricao',
+                'titulo' => $titulo,
+                'tipo' => $tipo,
+                'status' => 'connection_error',
+                'latency_ms' => $latency,
+                'error' => $e->getMessage()
+            ]);
+            
             throw new \Exception('Erro de conexão com a API do Gemini');
         } catch (\Exception $e) {
-            Log::error('Erro ao gerar descrição', ['error' => $e->getMessage()]);
+            $latency = round((microtime(true) - $startTime) * 1000, 2);
+            
+            if (!str_contains($e->getMessage(), '|')) {
+                Log::error('[AI Request] Erro ao gerar descrição', [
+                    'action' => 'gerar_descricao',
+                    'titulo' => $titulo,
+                    'tipo' => $tipo,
+                    'status' => 'error',
+                    'latency_ms' => $latency,
+                    'error' => $e->getMessage()
+                ]);
+            }
+            
             throw $e;
         }
     }
@@ -136,6 +191,14 @@ PROMPT;
         }
 
         $prompt = $this->construirPromptTags($titulo, $tipo, $descricao);
+        $startTime = microtime(true);
+
+        Log::info('[AI Request] Iniciando geração de tags', [
+            'action' => 'gerar_tags',
+            'titulo' => $titulo,
+            'tipo' => $tipo,
+            'has_descricao' => !empty($descricao),
+        ]);
 
         try {
             $response = Http::timeout(30)
@@ -155,13 +218,19 @@ PROMPT;
                     ]
                 ]);
 
+            $latency = round((microtime(true) - $startTime) * 1000, 2);
+
             if (!$response->successful()) {
                 $status = $response->status();
                 $body = $response->body();
                 
-                Log::error('Erro na API do Gemini ao gerar tags', [
+                Log::error('[AI Request] Erro na API do Gemini ao gerar tags', [
+                    'action' => 'gerar_tags',
+                    'titulo' => $titulo,
+                    'tipo' => $tipo,
                     'status' => $status,
-                    'body' => $body
+                    'latency_ms' => $latency,
+                    'error_body' => $body
                 ]);
                 
                 $errorMessage = match(true) {
@@ -196,13 +265,55 @@ PROMPT;
             
             $tags = array_unique($tags);
             
-            return array_slice(array_values($tags), 0, 8);
+            $finalTags = array_slice(array_values($tags), 0, 8);
+            
+            $promptTokens = $data['usageMetadata']['promptTokenCount'] ?? null;
+            $completionTokens = $data['usageMetadata']['candidatesTokenCount'] ?? null;
+            $totalTokens = $data['usageMetadata']['totalTokenCount'] ?? null;
+
+            Log::info('[AI Request] Tags geradas com sucesso', [
+                'action' => 'gerar_tags',
+                'titulo' => $titulo,
+                'tipo' => $tipo,
+                'status' => 'success',
+                'latency_ms' => $latency,
+                'latency_s' => round($latency / 1000, 2),
+                'prompt_tokens' => $promptTokens,
+                'completion_tokens' => $completionTokens,
+                'total_tokens' => $totalTokens,
+                'tags_count' => count($finalTags),
+                'tags' => $finalTags,
+            ]);
+
+            return $finalTags;
 
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error('Erro de conexão com Gemini ao gerar tags', ['error' => $e->getMessage()]);
+            $latency = round((microtime(true) - $startTime) * 1000, 2);
+            
+            Log::error('[AI Request] Erro de conexão com Gemini ao gerar tags', [
+                'action' => 'gerar_tags',
+                'titulo' => $titulo,
+                'tipo' => $tipo,
+                'status' => 'connection_error',
+                'latency_ms' => $latency,
+                'error' => $e->getMessage()
+            ]);
+            
             throw new \Exception('Erro de conexão com a API do Gemini');
         } catch (\Exception $e) {
-            Log::error('Erro ao gerar tags', ['error' => $e->getMessage()]);
+            $latency = round((microtime(true) - $startTime) * 1000, 2);
+            
+            if (!str_contains($e->getMessage(), '|')) {
+                Log::error('[AI Request] Erro ao gerar tags', [
+                    'action' => 'gerar_tags',
+                    'titulo' => $titulo,
+                    'tipo' => $tipo,
+                    'status' => 'error',
+                    'latency_ms' => $latency,
+                    'error' => $e->getMessage()
+                ]);
+            }
+            
             throw $e;
         }
     }
