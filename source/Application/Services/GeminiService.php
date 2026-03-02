@@ -356,10 +356,10 @@ PROMPT;
                         ]
                     ],
                     'generationConfig' => [
-                        'temperature' => 0.4,
-                        'maxOutputTokens' => 128,
+                        'temperature' => 0.5,
+                        'maxOutputTokens' => 250,
                         'topP' => 0.9,
-                        'topK' => 20,
+                        'topK' => 40,
                     ]
                 ]);
 
@@ -397,20 +397,44 @@ PROMPT;
 
             $texto = trim($data['candidates'][0]['content']['parts'][0]['text']);
             
-            $tags = array_map('trim', explode(',', $texto));
+            // Log da resposta bruta para debug
+            Log::debug('[AI Request] Resposta bruta de tags', [
+                'texto_original' => $texto
+            ]);
             
-            $tags = array_filter($tags, function($tag) {
-                $len = strlen($tag);
-                return $len >= 2 && $len <= 50;
-            });
+            // Remove possíveis textos adicionais (ex: "Tags: palavra1,palavra2")
+            $texto = preg_replace('/^(tags?:\s*)/i', '', $texto);
+            $texto = preg_replace('/\n.*$/', '', $texto); // Remove quebras de linha e texto após elas
             
+            // Separa por vírgula
+            $tags = explode(',', $texto);
+            
+            // Processa cada tag
             $tags = array_map(function($tag) {
-                return ucfirst(strtolower($tag));
+                // Remove espaços no início e fim
+                $tag = trim($tag);
+                // Remove apenas pontos e aspas no fim
+                $tag = rtrim($tag, '."\'\'');
+                // Remove apenas aspas no início
+                $tag = ltrim($tag, '"\'\'');
+                // Capitaliza primeira letra de cada palavra preservando acentos
+                return mb_convert_case($tag, MB_CASE_TITLE, 'UTF-8');
             }, $tags);
             
-            $tags = array_unique($tags);
+            // Filtra tags válidas (entre 3 e 50 caracteres, não vazias)
+            $tags = array_filter($tags, function($tag) {
+                $tag = trim($tag);
+                $len = mb_strlen($tag, 'UTF-8');
+                // Verifica se tem pelo menos 3 caracteres e não é só números/símbolos
+                return $len >= 3 && $len <= 50 && preg_match('/[a-zA-ZÀ-ÿ]/', $tag);
+            });
             
-            $finalTags = array_slice(array_values($tags), 0, 8);
+            // Remove duplicatas (case-insensitive)
+            $tagsLower = array_map(fn($t) => mb_strtolower($t, 'UTF-8'), $tags);
+            $tags = array_intersect_key($tags, array_unique($tagsLower));
+            
+            // Retorna até 8 tags
+            $finalTags = array_values(array_slice($tags, 0, 8));
             
             $promptTokens = $data['usageMetadata']['promptTokenCount'] ?? null;
             $completionTokens = $data['usageMetadata']['candidatesTokenCount'] ?? null;
@@ -471,14 +495,27 @@ PROMPT;
         $contexto = "{$titulo} ({$tipo})";
         
         if ($descricao) {
-            $contexto .= ": " . substr($descricao, 0, 150);
+            $contexto .= ": " . substr($descricao, 0, 200);
         }
 
         $prompt = <<<PROMPT
-Gere 5 tags para: {$contexto}
+Analise este recurso educacional e gere palavras-chave (tags) relevantes:
 
-Retorne apenas tags separadas por vírgula. Máximo 3 palavras por tag.
-Foco: área, nível, tecnologia, conceitos.
+{$contexto}
+
+REGRAS OBRIGATÓRIAS:
+- Gere entre 4 e 6 tags
+- Cada tag deve ter entre 1 e 3 palavras
+- Separe tags APENAS com vírgula (sem espaço após a vírgula)
+- Não adicione numeração, bullets ou formatação
+- Foco em: área de conhecimento, tecnologias, conceitos-chave, público-alvo
+- Use termos específicos e objetivos
+- Não use palavras genéricas: "conteúdo", "material", "recurso", "educacional"
+- Mantenha acentuação correta em português
+- NÃO quebre palavras no meio
+- Retorne APENAS as tags separadas por vírgula, nada mais
+
+Exemplo de formato correto: Programação,Python,Iniciante,Algoritmos,Lógica
 
 Tags:
 PROMPT;
