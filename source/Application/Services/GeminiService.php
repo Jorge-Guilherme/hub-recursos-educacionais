@@ -52,7 +52,7 @@ class GeminiService
                     ],
                     'generationConfig' => [
                         'temperature' => 0.7,
-                        'maxOutputTokens' => 1024,
+                        'maxOutputTokens' => 1500,
                         'topP' => 0.9,
                         'topK' => 40,
                     ]
@@ -356,7 +356,7 @@ PROMPT;
                         ]
                     ],
                     'generationConfig' => [
-                        'temperature' => 0.5,
+                        'temperature' => 0.7,
                         'maxOutputTokens' => 250,
                         'topP' => 0.9,
                         'topK' => 40,
