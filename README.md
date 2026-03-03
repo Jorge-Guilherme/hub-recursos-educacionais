@@ -13,8 +13,9 @@ Sistema fullstack para gerenciamento de recursos educacionais (vídeos, PDFs, li
 
 ## Documentação
 
-- **[API Documentation](API_DOCUMENTATION.md)** - Documentação completa da API REST com todos os endpoints
-- **[Architecture](ARCHITECTURE.md)** - Explicação detalhada da arquitetura geral, Clean Architecture e SOLID
+- **[API Documentation](API_DOCUMENTATION.md)** - Documentação completa da API REST com todos os endpoints.
+- **[Architecture](ARCHITECTURE.md)** - Explicação detalhada da arquitetura geral, Clean Architecture e SOLID.
+- **[Architecture](DATABASE.md)** - Explicação detalhada do Banco de Dados,
 
 ---
 
