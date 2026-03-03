@@ -1,47 +1,52 @@
 <div class="container">
   <div class="main-header">
-    <h1>Hub de Materiais Didáticos</h1>
+    <h1>Hub de Materiais didáticos</h1>
+  </div>
+  
+  <div class="header-stats">
     <div class="materials-counter">
       <span class="counter-number">{{ total }}</span>
-      <span class="counter-label">{{ total === 1 ? 'material cadastrado' : 'materiais cadastrados' }}</span>
+      <span class="counter-label">{{ total === 1 ? 'Material cadastrado' : 'Materiais cadastrados' }}</span>
     </div>
     <div class="materials-breakdown">
       <div class="breakdown-item">
-        <lucide-icon [img]="VideoIcon" [size]="16" class="breakdown-icon"></lucide-icon>
+        <lucide-icon [img]="VideoIcon" [size]="18" class="breakdown-icon"></lucide-icon>
         <span class="breakdown-count">{{ videoCount }}</span>
-        <span class="breakdown-label">{{ videoCount === 1 ? 'vídeo' : 'vídeos' }}</span>
+        <span class="breakdown-label">{{ videoCount === 1 ? 'Vídeo' : 'Vídeos' }}</span>
       </div>
+      <span class="separator">|</span>
       <div class="breakdown-item">
-        <lucide-icon [img]="FileTextIcon" [size]="16" class="breakdown-icon"></lucide-icon>
+        <lucide-icon [img]="FileTextIcon" [size]="18" class="breakdown-icon"></lucide-icon>
         <span class="breakdown-count">{{ pdfCount }}</span>
         <span class="breakdown-label">{{ pdfCount === 1 ? 'PDF' : 'PDFs' }}</span>
       </div>
+      <span class="separator">|</span>
       <div class="breakdown-item">
-        <lucide-icon [img]="Link2Icon" [size]="16" class="breakdown-icon"></lucide-icon>
+        <lucide-icon [img]="Link2Icon" [size]="18" class="breakdown-icon"></lucide-icon>
         <span class="breakdown-count">{{ linkCount }}</span>
-        <span class="breakdown-label">{{ linkCount === 1 ? 'link' : 'links' }}</span>
+        <span class="breakdown-label">{{ linkCount === 1 ? 'Link' : 'Links' }}</span>
       </div>
     </div>
   </div>
 
   <div class="tabs-container">
     <div class="tabs">
-    <button 
-      class="tab" 
-      [class.active]="activeTab === 'lista'"
-      (click)="activeTab = 'lista'">
-      Lista Geral
-    </button>
-    <button 
-      class="tab" 
-      [class.active]="activeTab === 'grupos'"
-      (click)="activeTab = 'grupos'">
-      Grupos
-    </button>
+      <button 
+        class="tab" 
+        [class.active]="activeTab === 'lista'"
+        (click)="activeTab = 'lista'">
+        Lista geral
+      </button>
+      <button 
+        class="tab" 
+        [class.active]="activeTab === 'grupos'"
+        (click)="activeTab = 'grupos'">
+        Grupos
+      </button>
     </div>
     <a routerLink="/novo" class="btn-add-material">
       <lucide-icon [img]="PlusIcon" [size]="20"></lucide-icon>
-      <span>Adicionar Material</span>
+      <span>Adicionar material</span>
     </a>
   </div>
 
