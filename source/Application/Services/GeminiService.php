@@ -397,43 +397,31 @@ PROMPT;
 
             $texto = trim($data['candidates'][0]['content']['parts'][0]['text']);
             
-            // Log da resposta bruta para debug
             Log::debug('[AI Request] Resposta bruta de tags', [
                 'texto_original' => $texto
             ]);
             
-            // Remove possíveis textos adicionais (ex: "Tags: palavra1,palavra2")
             $texto = preg_replace('/^(tags?:\s*)/i', '', $texto);
-            $texto = preg_replace('/\n.*$/', '', $texto); // Remove quebras de linha e texto após elas
+            $texto = preg_replace('/\n.*$/', '', $texto);
             
-            // Separa por vírgula
             $tags = explode(',', $texto);
             
-            // Processa cada tag
             $tags = array_map(function($tag) {
-                // Remove espaços no início e fim
                 $tag = trim($tag);
-                // Remove apenas pontos e aspas no fim
                 $tag = rtrim($tag, '."\'\'');
-                // Remove apenas aspas no início
                 $tag = ltrim($tag, '"\'\'');
-                // Capitaliza primeira letra de cada palavra preservando acentos
                 return mb_convert_case($tag, MB_CASE_TITLE, 'UTF-8');
             }, $tags);
             
-            // Filtra tags válidas (entre 3 e 50 caracteres, não vazias)
             $tags = array_filter($tags, function($tag) {
                 $tag = trim($tag);
                 $len = mb_strlen($tag, 'UTF-8');
-                // Verifica se tem pelo menos 3 caracteres e não é só números/símbolos
                 return $len >= 3 && $len <= 50 && preg_match('/[a-zA-ZÀ-ÿ]/', $tag);
             });
             
-            // Remove duplicatas (case-insensitive)
             $tagsLower = array_map(fn($t) => mb_strtolower($t, 'UTF-8'), $tags);
             $tags = array_intersect_key($tags, array_unique($tagsLower));
             
-            // Retorna até 8 tags
             $finalTags = array_values(array_slice($tags, 0, 8));
             
             $promptTokens = $data['usageMetadata']['promptTokenCount'] ?? null;

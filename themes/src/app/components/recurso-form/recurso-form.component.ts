@@ -61,10 +61,8 @@ export class RecursoFormComponent implements OnInit {
       }
     });
 
-    // Carregar tags disponíveis
     this.carregarTagsDisponiveis();
 
-    // Configurar sugestões de tags com debounce (no input de tag)
     this.tagInput.valueChanges.pipe(
       debounceTime(300),
       distinctUntilChanged()
@@ -72,7 +70,6 @@ export class RecursoFormComponent implements OnInit {
       this.filtrarSugestoes(value || '');
     });
 
-    // Configurar recomendações de tags baseadas no título
     this.recursoForm.get('titulo')?.valueChanges.pipe(
       debounceTime(500),
       distinctUntilChanged()
@@ -115,7 +112,6 @@ export class RecursoFormComponent implements OnInit {
   }
 
   carregarTagsDisponiveis(): void {
-    // Carregar uma amostra de recursos para extrair tags existentes
     this.recursoService.listarRecursos(1, 500).subscribe({
       next: (response) => {
         const tagsSet = new Set<string>();
@@ -139,16 +135,13 @@ export class RecursoFormComponent implements OnInit {
       return;
     }
 
-    // Filtrar tags que começam com o input ou contêm o input
     this.suggestedTags = this.availableTags
       .filter(tag => {
         const tagLower = tag.toLowerCase();
-        // Não sugerir tags que já foram adicionadas
         if (this.tags.includes(tag)) return false;
-        // Priorizar tags que começam com o input
         return tagLower.startsWith(trimmedInput) || tagLower.includes(trimmedInput);
       })
-      .slice(0, 8); // Limitar a 8 sugestões
+      .slice(0, 8);
     
     this.showSuggestions = this.suggestedTags.length > 0;
   }
@@ -163,7 +156,6 @@ export class RecursoFormComponent implements OnInit {
   }
 
   ocultarSugestoes(): void {
-    // Pequeno delay para permitir clique na sugestão
     setTimeout(() => {
       this.showSuggestions = false;
     }, 200);
@@ -177,7 +169,6 @@ export class RecursoFormComponent implements OnInit {
       return;
     }
 
-    // Extrair palavras-chave do título (palavras com 3+ caracteres)
     const palavrasChave = tituloTrimmed
       .split(/\s+/)
       .filter(palavra => palavra.length >= 3)
@@ -188,15 +179,12 @@ export class RecursoFormComponent implements OnInit {
       return;
     }
 
-    // Buscar tags que contenham qualquer palavra-chave
     const tagsRelevantes = new Set<string>();
     
     this.availableTags.forEach(tag => {
       const tagLower = tag.toLowerCase();
-      // Não sugerir tags já adicionadas
       if (this.tags.includes(tag)) return;
       
-      // Verificar se a tag contém alguma palavra-chave ou vice-versa
       for (const palavra of palavrasChave) {
         if (tagLower.includes(palavra) || palavra.includes(tagLower)) {
           tagsRelevantes.add(tag);
@@ -205,14 +193,12 @@ export class RecursoFormComponent implements OnInit {
       }
     });
 
-    // Limitar a 6 sugestões
     this.recommendedTags = Array.from(tagsRelevantes).slice(0, 6);
   }
 
   adicionarTagRecomendada(tag: string): void {
     if (!this.tags.includes(tag)) {
       this.tags.push(tag);
-      // Remover da lista de recomendadas
       this.recommendedTags = this.recommendedTags.filter(t => t !== tag);
     }
   }
