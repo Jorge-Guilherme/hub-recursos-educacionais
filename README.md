@@ -36,10 +36,8 @@ cd hub-recursos-educacionais
 
 2. **Configure as variáveis de ambiente:**
 ```bash
-# Backend (Laravel)
 cd source
 cp .env.example .env
-# Edite o .env e adicione sua GEMINI_API_KEY
 cd ..
 ```
 
