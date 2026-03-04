@@ -18,6 +18,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    # Não expõe porta para segurança
 
   backend:
     build:
@@ -27,23 +28,35 @@ services:
     restart: always
     working_dir: /var/www
     volumes:
-      - ./backend:/var/www
-      - /var/www/vendor
-      - /var/www/node_modules
+      - ./source:/var/www
+      - backend_vendor:/var/www/vendor
+      - backend_storage:/var/www/storage
     expose:
       - "9000"
     environment:
       APP_ENV: production
       APP_DEBUG: false
+      APP_KEY: ${APP_KEY}
       DB_CONNECTION: pgsql
       DB_HOST: postgres
       DB_PORT: 5432
       DB_DATABASE: ${DB_DATABASE:-hub_recursos}
       DB_USERNAME: ${DB_USERNAME:-hub_user}
       DB_PASSWORD: ${DB_PASSWORD:-changeme}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
     depends_on:
       postgres:
         condition: service_healthy
+    networks:
+      - hub_network
+
+  frontend:
+    build:
+      context: ./themes
+      dockerfile: Dockerfile.prod
+    container_name: hub_frontend_prod
+    volumes:
+      - frontend_dist:/usr/share/nginx/html
     networks:
       - hub_network
 
@@ -53,14 +66,14 @@ services:
     restart: always
     ports:
       - "80:80"
-      - "443:443"
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./source/public:/var/www/public
-      - ./themes/dist:/usr/share/nginx/html
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./source/public:/var/www/public:ro
+      - frontend_dist:/usr/share/nginx/html:ro
     depends_on:
       - backend
+      - frontend
     networks:
       - hub_network
 
@@ -70,4 +83,10 @@ networks:
 
 volumes:
   postgres_data:
+  backend_vendor:
+    driver: local
+  backend_storage:
+    driver: local
+  frontend_dist:
+    driver: local
     driver: local
