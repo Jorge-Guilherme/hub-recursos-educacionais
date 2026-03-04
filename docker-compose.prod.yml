@@ -55,6 +55,7 @@ services:
       context: ./themes
       dockerfile: Dockerfile.prod
     container_name: hub_frontend_prod
+    restart: "no"
     volumes:
       - frontend_dist:/usr/share/nginx/html
     networks:
