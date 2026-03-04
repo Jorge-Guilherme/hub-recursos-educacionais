@@ -1,0 +1,27 @@
+# Stage 1: Build
+FROM node:20-alpine AS build
+
+WORKDIR /app
+
+# Copiar package files
+COPY package*.json ./
+
+# Instalar dependências
+RUN npm ci --only=production=false
+
+# Copiar código fonte
+COPY . .
+
+# Build para produção
+RUN npm run build -- --configuration production
+
+# Stage 2: Serve (apenas os arquivos built)
+FROM nginx:alpine
+
+# Copiar build do Angular
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Expor porta
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
