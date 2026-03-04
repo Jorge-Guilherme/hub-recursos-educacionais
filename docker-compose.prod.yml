@@ -5,6 +5,8 @@ services:
     image: postgres:16-alpine
     container_name: hub_postgres_prod
     restart: always
+    env_file:
+      - ./source/.env
     environment:
       POSTGRES_DB: ${DB_DATABASE:-hub_recursos}
       POSTGRES_USER: ${DB_USERNAME:-hub_user}
@@ -27,6 +29,8 @@ services:
     container_name: hub_backend_prod
     restart: always
     working_dir: /var/www
+    env_file:
+      - ./source/.env
     volumes:
       - ./source:/var/www
       - backend_vendor:/var/www/vendor
